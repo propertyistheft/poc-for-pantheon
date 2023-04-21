@@ -1,0 +1,33 @@
+{
+    "name": "hipdevteam/poc-for-pantheon",
+    "description": "A Proof Of Concept to see if we can integrate this process into our workflow",
+    "type": "project",
+    "minimum-stability": "stable",
+    "repositories": [
+      {
+        "type": "composer",
+        "url": "https://wpackagist.org"
+      },
+      {
+        "type": "composer",
+        "url": "https://composer.deliciousbrains.com"
+      },
+      {
+        "type": "composer",
+        "url": "https://propertyistheft.github.io/"
+      },
+      {
+        "type": "composer",
+        "url": "https://connect.advancedcustomfields.com"
+      }
+    ],
+    "require": {
+        "hipdevteam/elementor-pro": "^3.12",
+        "wpackagist-plugin/elementor": "^3.12"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    }
+}
