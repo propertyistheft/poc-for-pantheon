@@ -193,16 +193,16 @@
         },
         {
             "name": "wpackagist-plugin/wordpress-seo",
-            "version": "19.0",
-            "version_normalized": "19.0.0.0",
+            "version": "20.5",
+            "version_normalized": "20.5.0.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/wordpress-seo/",
-                "reference": "tags/19.0"
+                "reference": "tags/20.5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/wordpress-seo.19.0.zip"
+                "url": "https://downloads.wordpress.org/plugin/wordpress-seo.20.5.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
