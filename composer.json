@@ -23,7 +23,8 @@
     ],
     "require": {
         "hipdevteam/elementor-pro": "^3.12",
-        "wpackagist-plugin/elementor": "^3.12"
+        "wpackagist-plugin/elementor": "^3.12",
+        "wpackagist-plugin/wordpress-seo":"19.0"
     },
     "config": {
         "allow-plugins": {
