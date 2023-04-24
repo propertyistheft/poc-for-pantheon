@@ -6,7 +6,6 @@ wp-content/uploads
 wp-content/blogs.dir/
 wp-content/upgrade/
 wp-content/themes/
-test
 !wp-content/themes/twentytwentythree
 !wp-content/themes/index.php
 wp-content/backup-db/
