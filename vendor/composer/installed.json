@@ -190,6 +190,27 @@
             "installation-source": "dist",
             "homepage": "https://wordpress.org/plugins/elementor/",
             "install-path": "../../wp-content/plugins/elementor"
+        },
+        {
+            "name": "wpackagist-plugin/wp-mail-smtp",
+            "version": "3.7.0",
+            "version_normalized": "3.7.0.0",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/wp-mail-smtp/",
+                "reference": "tags/3.7.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/wp-mail-smtp.3.7.0.zip"
+            },
+            "require": {
+                "composer/installers": "^1.0 || ^2.0"
+            },
+            "type": "wordpress-plugin",
+            "installation-source": "dist",
+            "homepage": "https://wordpress.org/plugins/wp-mail-smtp/",
+            "install-path": "../../wp-content/plugins/wp-mail-smtp"
         }
     ],
     "dev": true,

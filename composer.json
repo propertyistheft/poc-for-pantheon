@@ -23,7 +23,8 @@
     ],
     "require": {
         "hipdevteam/elementor-pro": "^3.12",
-        "wpackagist-plugin/elementor": "^3.12"
+        "wpackagist-plugin/elementor": "^3.12",
+        "wpackagist-plugin/wp-mail-smtp": "^3.7"
     },
     "config": {
         "allow-plugins": {
