@@ -40,7 +40,7 @@ abstract class Files_Upload_Handler {
 	/**
 	 * Is Enabled
 	 *
-	 * @deprecated 3.5.0
+	 * @deprcated 3.5.0
 	 *
 	 * @return bool
 	 */
@@ -59,7 +59,7 @@ abstract class Files_Upload_Handler {
 	/**
 	 * handle_upload_prefilter
 	 *
-	 * @deprecated 3.5.0
+	 * @deprcated 3.5.0
 	 *
 	 * @param $file
 	 *
@@ -74,7 +74,7 @@ abstract class Files_Upload_Handler {
 	/**
 	 * is_file_should_handled
 	 *
-	 * @deprecated 3.5.0
+	 * @deprcated 3.5.0
 	 *
 	 * @param $file
 	 *
@@ -91,7 +91,7 @@ abstract class Files_Upload_Handler {
 	/**
 	 * file_sanitizer_can_run
 	 *
-	 * @deprecated 3.5.0
+	 * @deprcated 3.5.0
 	 *
 	 * @return bool
 	 */
@@ -109,7 +109,7 @@ abstract class Files_Upload_Handler {
 	 * ref: https://core.trac.wordpress.org/ticket/39550
 	 * ref: https://core.trac.wordpress.org/ticket/40175
 	 *
-	 * @deprecated 3.5.0
+	 * @deprcated 3.5.0
 	 *
 	 * @param $data
 	 * @param $file

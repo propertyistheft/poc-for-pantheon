@@ -11,10 +11,6 @@ class Search_Results extends Archive {
 		return 'search-results';
 	}
 
-	public static function get_type() {
-		return 'search-results';
-	}
-
 	public static function get_sub_type() {
 		return 'search';
 	}

@@ -132,7 +132,6 @@ abstract class Model_Base implements \JsonSerializable {
 	/**
 	 * @return array
 	 */
-	#[\ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return ( new Collection( (array) $this ) )
 			->map( function ( $_, $key ) {

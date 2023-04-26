@@ -72,7 +72,6 @@ class Collection extends Collection_Base implements \JsonSerializable {
 	 *
 	 * @return array
 	 */
-	#[\ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return $this->all();
 	}

@@ -149,6 +149,7 @@ class Product_Data_Tabs extends Base_Widget {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'tab_typography',
+				'label' => esc_html__( 'Typography', 'elementor-pro' ),
 				'selector' => '.woocommerce {{WRAPPER}} .woocommerce-tabs ul.wc-tabs li a',
 			]
 		);
@@ -158,7 +159,6 @@ class Product_Data_Tabs extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
 					'.woocommerce {{WRAPPER}} .woocommerce-tabs ul.wc-tabs li' => 'border-radius: {{SIZE}}{{UNIT}} {{SIZE}}{{UNIT}} 0 0',
 				],
@@ -190,6 +190,7 @@ class Product_Data_Tabs extends Base_Widget {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'content_typography',
+				'label' => esc_html__( 'Typography', 'elementor-pro' ),
 				'selector' => '.woocommerce {{WRAPPER}} .woocommerce-tabs .woocommerce-Tabs-panel',
 			]
 		);
@@ -218,6 +219,7 @@ class Product_Data_Tabs extends Base_Widget {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'content_heading_typography',
+				'label' => esc_html__( 'Typography', 'elementor-pro' ),
 				'selector' => '.woocommerce {{WRAPPER}} .woocommerce-tabs .woocommerce-Tabs-panel h2',
 			]
 		);
@@ -234,7 +236,6 @@ class Product_Data_Tabs extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Width', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
 					'.woocommerce {{WRAPPER}} .woocommerce-tabs .woocommerce-Tabs-panel' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}; margin-top: -{{TOP}}{{UNIT}}',
 				],
@@ -246,7 +247,6 @@ class Product_Data_Tabs extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
 					'.woocommerce {{WRAPPER}} .woocommerce-tabs .woocommerce-Tabs-panel' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
 					'.woocommerce {{WRAPPER}} .woocommerce-tabs ul.wc-tabs' => 'margin-left: {{TOP}}{{UNIT}}; margin-right: {{RIGHT}}{{UNIT}}',
@@ -268,9 +268,9 @@ class Product_Data_Tabs extends Base_Widget {
 	protected function render() {
 		global $product;
 
-		$product = $this->get_product();
+		$product = wc_get_product();
 
-		if ( ! $product ) {
+		if ( empty( $product ) ) {
 			return;
 		}
 

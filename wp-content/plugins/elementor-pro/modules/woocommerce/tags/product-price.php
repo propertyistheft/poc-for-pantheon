@@ -2,6 +2,7 @@
 namespace ElementorPro\Modules\Woocommerce\Tags;
 
 use Elementor\Controls_Manager;
+use ElementorPro\Modules\Woocommerce\Tags\Traits\Tag_Product_Id;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -32,15 +33,12 @@ class Product_Price extends Base_Tag {
 	}
 
 	public function render() {
-		$settings = $this->get_settings();
-
-		$product = $this->get_product( $settings['product_id'] );
-
+		$product = wc_get_product( $this->get_settings( 'product_id' ) );
 		if ( ! $product ) {
 			return '';
 		}
 
-		$format = $settings['format'];
+		$format = $this->get_settings( 'format' );
 		$value = '';
 		switch ( $format ) {
 			case 'both':

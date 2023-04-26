@@ -25,10 +25,6 @@ class Document extends Theme_Document {
 		return esc_html__( 'Custom Code', 'elementor-pro' );
 	}
 
-	public static function get_type() {
-		return Module::DOCUMENT_TYPE;
-	}
-
 	public function get_name() {
 		return Module::DOCUMENT_TYPE;
 	}

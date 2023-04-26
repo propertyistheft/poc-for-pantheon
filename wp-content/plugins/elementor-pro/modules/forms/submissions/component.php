@@ -1,13 +1,9 @@
 <?php
 namespace ElementorPro\Modules\Forms\Submissions;
 
-use Elementor\Core\Admin\Menu\Admin_Menu_Manager;
 use Elementor\Core\Admin\Menu\Main as MainMenu;
 use Elementor\Settings;
-use ElementorPro\License\API;
 use ElementorPro\Modules\Forms\Registrars\Form_Actions_Registrar;
-use ElementorPro\Modules\Forms\Submissions\AdminMenuItems\Submissions_Menu_Item;
-use ElementorPro\Modules\Forms\Submissions\AdminMenuItems\Submissions_Promotion_Menu_Item;
 use ElementorPro\Plugin;
 use ElementorPro\Base\Module_Base;
 use ElementorPro\Modules\Forms\Submissions\Database\Query;
@@ -63,16 +59,19 @@ class Component extends Module_Base {
 	/**
 	 * Register admin menu
 	 */
-	private function register_admin_menu_legacy( Admin_Menu_Manager $admin_menu ) {
-		$admin_menu->register( static::PAGE_ID,
-			$this->can_use_submissions()
-				? new Submissions_Menu_Item()
-				: new Submissions_Promotion_Menu_Item()
-		);
-	}
+	private function register_admin_menu_legacy() {
+		$title = $this->get_title();
 
-	private function can_use_submissions() : bool {
-		return API::is_license_active() && ! API::is_license_expired();
+		add_submenu_page(
+			Settings::PAGE_ID,
+			$title,
+			$title,
+			'manage_options',
+			self::PAGE_ID,
+			function () {
+				$this->render_admin_page();
+			}
+		);
 	}
 
 	private function render_admin_page() {
@@ -186,28 +185,8 @@ class Component extends Module_Base {
 				$this->register_admin_menu( $menu );
 			} );
 		} else {
-			add_action( 'elementor/admin/menu/register', function( Admin_Menu_Manager $admin_menu ) {
-				$this->register_admin_menu_legacy( $admin_menu );
-			}, 9 /* After "Settings" */ );
-
-			// TODO: BC - Remove after `Admin_Menu_Manager` will be the standard.
-			add_action( 'admin_menu', function () {
-				if ( did_action( 'elementor/admin/menu/register' ) ) {
-					return;
-				}
-
-				$title = $this->get_title();
-
-				add_submenu_page(
-					Settings::PAGE_ID,
-					$title,
-					$title,
-					'manage_options',
-					self::PAGE_ID,
-					function () {
-						$this->render_admin_page();
-					}
-				);
+			add_action( 'admin_menu', function() {
+				$this->register_admin_menu_legacy();
 			}, 21 /* after Elementor page */ );
 		}
 

@@ -29,12 +29,12 @@ class License_Command extends \WP_CLI_Command {
 			\WP_CLI::error( sprintf( '%s (%s) ', $data->get_error_message(), $data->get_error_code() ) );
 		}
 
-		if ( ! $data['success'] ) {
+		if ( API::STATUS_VALID !== $data['license'] ) {
 			$errors = [
 				'no_activations_left' => 'You have no more activations left.',
 				'expired' => 'Your License Has Expired',
 				'missing' => 'Your license is missing. Please check your key again.',
-				'cancelled' => 'Your license key has been cancelled',
+				'revoked' => 'Your license key has been cancelled',
 				'key_mismatch' => 'Your license is invalid for this domain. Please check your key again.',
 			];
 

@@ -67,7 +67,6 @@ class Responsive {
 	 * Retrieve the default responsive breakpoints.
 	 *
 	 * @since 1.0.0
-	 * @deprecated 3.2.0
 	 * @access public
 	 * @static
 	 *
@@ -85,7 +84,6 @@ class Responsive {
 	 * Retrieve the editable breakpoints.
 	 *
 	 * @since 1.0.0
-	 * @deprecated 3.2.0
 	 * @access public
 	 * @static
 	 *
@@ -127,7 +125,6 @@ class Responsive {
 
 	/**
 	 * @since 2.1.0
-	 * @deprecated 3.2.0
 	 * @access public
 	 * @static
 	 */
@@ -139,7 +136,6 @@ class Responsive {
 
 	/**
 	 * @since 2.1.0
-	 * @deprecated 3.2.0
 	 * @access public
 	 * @static
 	 */
@@ -151,7 +147,6 @@ class Responsive {
 
 	/**
 	 * @since 2.1.0
-	 * @deprecated 3.2.0
 	 * @access public
 	 * @static
 	 */

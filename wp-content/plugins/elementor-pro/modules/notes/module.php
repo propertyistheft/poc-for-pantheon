@@ -70,7 +70,7 @@ class Module extends App {
 		wp_enqueue_style(
 			'elementor-pro-notes-frontend',
 			$this->get_css_assets_url( 'modules/notes/frontend' ),
-			[ 'elementor-icons' ],
+			[],
 			ELEMENTOR_PRO_VERSION
 		);
 	}
@@ -135,8 +135,7 @@ class Module extends App {
 
 		$route = [
 			'title' => Utils::get_clean_document_title(),
-			// PHPCS - The url cleaned inside the clear_url method.
-			'url' => Utils::clean_url( $_SERVER['REQUEST_URI'] ?? '' ), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+			'url' => Utils::clean_url( $_SERVER['REQUEST_URI'] ),
 			'note_url_pattern' => Note::generate_url(),
 			'post_id' => null,
 			'is_elementor_library' => false,
@@ -155,14 +154,11 @@ class Module extends App {
 		$this->set_settings( 'current_user_can', [
 			'create' => current_user_can( Capabilities::CREATE_NOTES ),
 			'create_users' => current_user_can( 'create_users' ),
-			'edit_users' => current_user_can( 'edit_users' ),
 		] );
 
 		$this->set_settings( 'urls', [
 			'admin_url_create_user' => get_admin_url( null, 'user-new.php' ),
-			'admin_url_edit_user' => get_admin_url( null, 'user-edit.php' ),
 			'avatar_defaults' => User::generate_avatars_urls( 0 ),
-			'help_notes_features' => 'https://go.elementor.com/app-notes',
 		] );
 	}
 

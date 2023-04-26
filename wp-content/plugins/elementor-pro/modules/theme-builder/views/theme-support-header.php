@@ -27,7 +27,5 @@ $location_manager = Module::instance()->get_locations_manager();
 	<?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
-<?php
-	wp_body_open();
-	$location_manager->do_location( 'header' );
-?>
+
+<?php $location_manager->do_location( 'header' ); ?>

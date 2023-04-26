@@ -34,10 +34,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<# if ( description ) { #>
 			<div class="elementor-finder__results__item__description">- {{{ description }}}</div>
 		<# } #>
-
-		<# if ( lock ) { #>
-		<div class="elementor-finder__results__item__badge"><i class="{{{ lock.badge.icon }}}"></i>{{ lock.badge.text }}</div>
-		<# } #>
 	</a>
 	<# if ( actions.length ) { #>
 		<div class="elementor-finder__results__item__actions">

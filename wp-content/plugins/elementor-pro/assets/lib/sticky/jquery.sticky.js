@@ -8,9 +8,7 @@
 			isFollowingParent = false,
 			isReachedEffectsPoint = false,
 			elements = {},
-			settings,
-			elementOffsetValue,
-			elementWidth;
+			settings;
 
 		var defaultSettings = {
 			to: 'top',
@@ -23,8 +21,6 @@
 				stickyEffects: 'sticky-effects',
 				spacer: 'sticky-spacer',
 			},
-			isRTL: false,
-			handleScrollbarWidth: false,
 		};
 
 		var initElements = function() {
@@ -83,18 +79,6 @@
 			return $elementCSSBackup.data( 'css-backup-' + backupState );
 		};
 
-		const updateElementSizesData = () => {
-			elementWidth = getElementOuterSize( $element, 'width' );
-			elementOffsetValue = $element.offset().left;
-
-			if ( settings.isRTL ) {
-				// `window.innerWidth` includes the scrollbar while `document.body.offsetWidth` doesn't.
-				const documentWidth = settings.handleScrollbarWidth ? window.innerWidth : document.body.offsetWidth;
-
-				elementOffsetValue = Math.max( documentWidth - elementWidth - elementOffsetValue, 0 );
-			}
-		}
-
 		var addSpacer = function() {
 			elements.$spacer = $element.clone()
 				.addClass( settings.classes.spacer )
@@ -112,21 +96,18 @@
 		};
 
 		var stickElement = function() {
-			backupCSS( $element, 'unsticky', [ 'position', 'width', 'margin-top', 'margin-bottom', 'top', 'bottom', 'inset-inline-start' ] );
+			backupCSS( $element, 'unsticky', [ 'position', 'width', 'margin-top', 'margin-bottom', 'top', 'bottom' ] );
 
-			const css = {
+			var css = {
 				position: 'fixed',
-				width: elementWidth,
+				width: getElementOuterSize( $element, 'width' ),
 				marginTop: 0,
 				marginBottom: 0,
 			};
 
 			css[ settings.to ] = settings.offset;
-			css[ 'top' === settings.to ? 'bottom' : 'top' ] = '';
 
-			if ( elementOffsetValue ) {
-				css[ 'inset-inline-start' ] = elementOffsetValue + 'px';
-			}
+			css[ 'top' === settings.to ? 'bottom' : 'top' ] = '';
 
 			$element
 				.css( css )
@@ -144,23 +125,11 @@
 
 			elements.$parent.css( 'position', 'relative' );
 
-			backupCSS( $element, 'notFollowing', [ 'position', 'inset-inline-start', 'top', 'bottom' ] );
+			backupCSS( $element, 'notFollowing', [ 'position', 'top', 'bottom' ] );
 
-			const css = {
+			var css = {
 				position: 'absolute',
 			};
-
-			elementOffsetValue = elements.$spacer.position().left;
-
-			if ( settings.isRTL ) {
-				const parentWidth = $element.parent().outerWidth(),
-					elementOffsetValueLeft = elements.$spacer.position().left;
-
-				elementWidth = elements.$spacer.outerWidth();
-				elementOffsetValue = Math.max( parentWidth - elementWidth - elementOffsetValueLeft, 0 );
-			}
-
-			css[ 'inset-inline-start' ] = elementOffsetValue + 'px';
 
 			css[ settings.to ] = '';
 
@@ -223,8 +192,6 @@
 		};
 
 		var stick = function() {
-			updateElementSizesData();
-
 			addSpacer();
 
 			stickElement();
@@ -323,16 +290,10 @@
 
 			unstickElement();
 
-			removeSpacer();
-
-			updateElementSizesData();
-
-			addSpacer();
-
 			stickElement();
 
 			if ( settings.parent ) {
-				// Force recalculation of the relation between the element and its parent.
+				// Force recalculation of the relation between the element and its parent
 				isFollowingParent = false;
 
 				checkParent();

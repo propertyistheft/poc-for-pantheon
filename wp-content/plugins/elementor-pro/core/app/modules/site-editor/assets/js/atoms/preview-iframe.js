@@ -22,7 +22,6 @@ export default function PreviewIFrame( props ) {
 			className={ `site-editor__preview-iframe site-editor__preview-iframe--${ props.templateType }` }
 		>
 			<iframe
-				title="preview"
 				src={ props.src }
 				className={ `site-editor__preview-iframe__iframe` }
 				style={ { transform: `scale(${ scale })`, height, width: previewBreakpoint } }

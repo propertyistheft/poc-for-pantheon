@@ -61,6 +61,7 @@ class Product_Additional_Information extends Base_Widget {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'heading_typography',
+				'label' => esc_html__( 'Typography', 'elementor-pro' ),
 				'selector' => '.woocommerce {{WRAPPER}} h2',
 				'condition' => [
 					'show_heading!' => '',
@@ -84,6 +85,7 @@ class Product_Additional_Information extends Base_Widget {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'content_typography',
+				'label' => esc_html__( 'Typography', 'elementor-pro' ),
 				'selector' => '.woocommerce {{WRAPPER}} .shop_attributes',
 			]
 		);
@@ -93,9 +95,9 @@ class Product_Additional_Information extends Base_Widget {
 
 	protected function render() {
 		global $product;
-		$product = $this->get_product();
+		$product = wc_get_product();
 
-		if ( ! $product ) {
+		if ( empty( $product ) ) {
 			return;
 		}
 

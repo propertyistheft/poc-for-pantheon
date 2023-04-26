@@ -78,11 +78,7 @@ class Module extends Module_Base {
 					'active' => true,
 				],
 				'placeholder' => esc_html__( 'key|value', 'elementor-pro' ),
-				'description' => sprintf(
-					/* translators: %s: The `|` separate char. */
-					esc_html__( 'Set custom attributes for the wrapper element. Each attribute in a separate line. Separate attribute key from the value using %s character.', 'elementor-pro' ),
-					'<code>|</code>'
-				),
+				'description' => sprintf( esc_html__( 'Set custom attributes for the wrapper element. Each attribute in a separate line. Separate attribute key from the value using %s character.', 'elementor-pro' ), '<code>|</code>' ),
 				'classes' => 'elementor-control-direction-ltr',
 			]
 		);

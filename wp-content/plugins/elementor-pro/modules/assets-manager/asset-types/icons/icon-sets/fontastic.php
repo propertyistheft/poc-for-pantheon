@@ -1,8 +1,6 @@
 <?php
 namespace ElementorPro\Modules\AssetsManager\AssetTypes\Icons\IconSets;
 
-use ElementorPro\Core\Utils;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -16,8 +14,7 @@ class Fontastic extends Icon_Set_Base {
 	protected $allowed_webfont_extensions = [ 'woff', 'ttf', 'svg', 'eot' ];
 
 	protected function prepare() {
-		$this->data = Utils::_unstable_file_get_contents( $this->directory . $this->stylesheet_file );
-		$this->dir_name = $this->get_unique_name();
+		$this->data = file_get_contents( $this->directory . $this->stylesheet_file );
 	}
 
 	public function get_type() {
@@ -42,6 +39,10 @@ class Fontastic extends Icon_Set_Base {
 			$icons[] = $icon;
 		}
 		return $icons;
+	}
+
+	protected function get_url( $filename = '' ) {
+		return $this->get_file_url( $this->dir_name . $filename );
 	}
 
 	protected function get_prefix() {
@@ -70,7 +71,11 @@ class Fontastic extends Icon_Set_Base {
 		return $set_name;
 	}
 
-	protected function get_stylesheet( $unique_name = '' ) {
+	protected function get_stylesheet() {
+		$name = $this->get_name();
+		if ( ! $name ) {
+			return false; //  missing name
+		}
 		return $this->get_url() . '/' . $this->stylesheet_file;
 	}
 }

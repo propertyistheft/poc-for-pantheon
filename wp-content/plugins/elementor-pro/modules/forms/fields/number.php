@@ -79,13 +79,11 @@ class Number extends Field_Base {
 	public function validation( $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ) {
 
 		if ( ! empty( $field['field_max'] ) && $field['field_max'] < (int) $field['value'] ) {
-			/* translators: %s: The value of max field. */
-			$ajax_handler->add_error( $field['id'], sprintf( esc_html__( 'The field value must be less than or equal to %s.', 'elementor-pro' ), $field['field_max'] ) );
+			$ajax_handler->add_error( $field['id'], sprintf( esc_html__( 'The value must be less than or equal to %s', 'elementor-pro' ), $field['field_max'] ) );
 		}
 
 		if ( ! empty( $field['field_min'] ) && $field['field_min'] > (int) $field['value'] ) {
-			/* translators: %s: The value of min field. */
-			$ajax_handler->add_error( $field['id'], sprintf( esc_html__( 'The field value must be greater than or equal to %s.', 'elementor-pro' ), $field['field_min'] ) );
+			$ajax_handler->add_error( $field['id'], sprintf( esc_html__( 'The value must be greater than or equal %s', 'elementor-pro' ), $field['field_min'] ) );
 		}
 	}
 

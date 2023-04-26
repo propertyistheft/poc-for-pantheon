@@ -12,8 +12,7 @@ class Lock_Error_Response extends \WP_Error {
 		parent::__construct(
 			'post_lock',
 			sprintf(
-				/* translators: %s: User display name. */
-				esc_html__( '%s is currently editing this template, please try again later', 'elementor-pro' ),
+				__( '%s is currently editing this template, please try again later', 'elementor-pro' ),
 				$user->display_name
 			),
 			[

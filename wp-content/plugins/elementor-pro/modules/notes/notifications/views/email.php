@@ -13,13 +13,12 @@
 <div style="background-color: #E5E5E5; text-align: center; padding: 60px 0; direction: <?php echo is_rtl() ? 'rtl' : 'ltr'; ?>; font-family: 'Roboto', Arial, Helvetica, sans-serif;">
 	<div style="
 		box-sizing: border-box;
-		width: 90%;
-		max-width: 640px;
+		width: 640px;
 		padding: 60px;
 		margin: auto;
 		background-color: #FFF;
 	">
-		<h1 style="padding: 0; margin: 0 0 40px 0; font-weight: normal; font-size: 25px; line-height: 1.35;">
+		<h1 style="padding: 0; margin: 0 0 40px 0; font-weight: normal; font-size: 25px;">
 			<?php
 
 			echo sprintf(
@@ -51,7 +50,6 @@
 				display: inline-block;
 				font-weight: bold;
 				font-size: 18px;
-				line-height: 1.35;
 				border-radius: 3px;
 				text-decoration: none;
 				padding: 12px 20px;
@@ -64,8 +62,7 @@
 
 	<div style="
 		box-sizing: border-box;
-		width: 90%;
-		max-width: 640px;
+		width: 640px;
 		padding: 60px;
 		margin: 1px auto 0 auto;
 		background-color: #FFF;
@@ -79,10 +76,15 @@
 
 			<?php
 			echo sprintf(
-				/* translators: 1: Link opening tag, 2: Link closing tag. */
-				esc_html__( 'Contact the site admin or turn off notifications for Notes in your %1$suser profile%2$s.', 'elementor-pro' ),
-				sprintf( '<a href="%1$s" rel="noopener noreferrer" style="text-decoration: underline; color: #000;">', esc_url( admin_url( 'profile.php' ) ) ),
-				'</a>'
+				esc_html__(
+					'Contact the site admin or turn off notifications for Notes in your %s.',
+					'elementor-pro'
+				),
+				sprintf(
+					'<a href="%1$s" rel="noopener noreferrer" style="text-decoration: underline; color: #000;">%2$s</a>',
+					esc_url( admin_url( 'profile.php' ) ),
+					esc_html__( 'user profile', 'elementor-pro' )
+				)
 			);
 			?>
 		</p>
@@ -93,16 +95,10 @@
 			?>
 		</p>
 
-		<a
-			href="https://elementor.com/"
-			target="_blank"
-			rel="noreferrer"
-		>
-			<img
-				src="<?php echo esc_url( ELEMENTOR_PRO_MODULES_URL . 'notes/assets/images/elementor-logo-orange.png' ); ?>"
-				alt="<?php echo esc_attr__( 'Elementor Logo', 'elementor-pro' ); ?>"
-				style="width: 114px;"
-			/>
-		</a>
+		<img
+			src="<?php echo esc_url( ELEMENTOR_PRO_MODULES_URL . 'notes/assets/images/elementor-logo-orange.png' ); ?>"
+			alt="<?php echo esc_attr__( 'Elementor Logo', 'elementor-pro' ); ?>"
+			style="width: 114px;"
+		/>
 	</div>
 </div>

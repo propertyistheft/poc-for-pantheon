@@ -150,38 +150,42 @@
         },
         {
             "name": "hipdevteam/elementor-pro",
-            "version": "3.12.2",
-            "version_normalized": "3.12.2.0",
+            "version": "3.7.0",
+            "version_normalized": "3.7.0.0",
             "source": {
                 "type": "git",
-                "url": "git@gitlab.com:hipdevteam/elementor-pro.git",
-                "reference": "97ef7e5eaba937bf25d264fff4bbca6d04a8d51c"
+                "url": "https://gitlab.com/hipdevteam/elementor-pro.git",
+                "reference": "1ccc185b28bfa29ef619944a0ccb9f9374bb24a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/hipdevteam%2Felementor-pro/repository/archive.zip?sha=97ef7e5eaba937bf25d264fff4bbca6d04a8d51c",
-                "reference": "97ef7e5eaba937bf25d264fff4bbca6d04a8d51c",
+                "url": "https://gitlab.com/api/v4/projects/hipdevteam%2Felementor-pro/repository/archive.zip?sha=1ccc185b28bfa29ef619944a0ccb9f9374bb24a1",
+                "reference": "1ccc185b28bfa29ef619944a0ccb9f9374bb24a1",
                 "shasum": ""
             },
-            "time": "2023-04-13T15:52:42+00:00",
+            "time": "2022-05-13T04:52:39+00:00",
             "type": "wordpress-plugin",
             "installation-source": "dist",
             "notification-url": "https://packagist.org/downloads/",
             "description": "Fork of Elementor Pro for use with composer",
+            "support": {
+                "issues": "https://gitlab.com/hipdevteam/elementor-pro/-/issues",
+                "source": "https://gitlab.com/hipdevteam/elementor-pro/-/tree/3.7.0"
+            },
             "install-path": "../../wp-content/plugins/elementor-pro"
         },
         {
             "name": "wpackagist-plugin/elementor",
-            "version": "3.12.1",
-            "version_normalized": "3.12.1.0",
+            "version": "3.7.0",
+            "version_normalized": "3.7.0.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/elementor/",
-                "reference": "tags/3.12.1"
+                "reference": "tags/3.7.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/elementor.3.12.1.zip"
+                "url": "https://downloads.wordpress.org/plugin/elementor.3.7.0.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"

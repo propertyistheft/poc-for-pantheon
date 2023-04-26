@@ -145,7 +145,8 @@ abstract class Icon_Set_Base {
 	public function move_files( $post_id ) {
 		// @todo: save only needed files
 		$wp_filesystem = Custom_Icons::get_wp_filesystem();
-		$to = $this->get_ensure_upload_dir( $this->dir_name ) . '/';
+		$unique_name = $this->get_unique_name();
+		$to = $this->get_ensure_upload_dir( $unique_name ) . '/';
 
 		foreach ( $wp_filesystem->dirlist( $this->directory, false, true ) as $file ) {
 			$full_path = $this->directory . $file['name'];
@@ -166,6 +167,7 @@ abstract class Icon_Set_Base {
 
 		$this->cleanup_temp_files( $wp_filesystem );
 		update_post_meta( $post_id, '_elementor_icon_set_path', $to );
+		$this->dir_name = $unique_name;
 		$this->directory = $to;
 	}
 
@@ -195,9 +197,7 @@ abstract class Icon_Set_Base {
 		return ! is_dir( $this->get_icon_sets_dir() . '/' . $name );
 	}
 
-	protected function get_url( $filename = '' ) {
-		return $this->get_file_url( $this->dir_name . $filename );
-	}
+	abstract protected function get_url( $filename = '' );
 
 	protected function get_stylesheet() {
 		return '';
@@ -212,9 +212,10 @@ abstract class Icon_Set_Base {
 	}
 
 	public function build_config() {
+		$name = $this->get_name();
 		$icon_set_config = [
-			'name' => $this->dir_name,
-			'label' => ucwords( str_replace( [ '-', '_' ], ' ', $this->dir_name ) ),
+			'name' => $name,
+			'label' => ucwords( str_replace( [ '-', '_' ], ' ', $name ) ),
 			'url' => $this->get_stylesheet(),
 			'enqueue' => $this->get_enqueue(),
 			'prefix' => $this->get_prefix(),

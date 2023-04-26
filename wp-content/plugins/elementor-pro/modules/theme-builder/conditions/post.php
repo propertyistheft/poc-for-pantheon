@@ -40,6 +40,7 @@ class Post extends Condition_Base {
 	}
 
 	public function get_all_label() {
+		/* translators: %s: Post type label. */
 		return $this->post_type->label;
 	}
 

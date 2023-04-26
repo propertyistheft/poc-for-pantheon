@@ -83,12 +83,7 @@ class Breadcrumbs extends Base {
 		$this->add_control(
 			'html_description',
 			[
-				'raw' => sprintf(
-					/* translators: 1: Link opening tag, 2: Link closing tag. */
-					esc_html__( 'Additional settings are available in the Yoast SEO %1$sBreadcrumbs Panel%2$s', 'elementor-pro' ),
-					sprintf( '<a href="%s" target="_blank">', admin_url( 'admin.php?page=wpseo_titles#top#breadcrumbs' ) ),
-					'</a>'
-				),
+				'raw' => esc_html__( 'Additional settings are available in the Yoast SEO', 'elementor-pro' ) . ' ' . sprintf( '<a href="%s" target="_blank">%s</a>', admin_url( 'admin.php?page=wpseo_titles#top#breadcrumbs' ), esc_html__( 'Breadcrumbs Panel', 'elementor-pro' ) ),
 				'type' => Controls_Manager::RAW_HTML,
 				'content_classes' => 'elementor-descriptor',
 			]

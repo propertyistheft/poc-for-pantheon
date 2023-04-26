@@ -312,19 +312,22 @@ class Video_Playlist extends Base_Widget {
 						'title' => esc_html__( 'Sample Video', 'elementor-pro' ),
 						'youtube_url' => 'https://www.youtube.com/watch?v=XHOmBV4js_E',
 						'duration' => '0:16',
-						'thumbnail' => [ 'url' => 'https://img.youtube.com/vi/XHOmBV4js_E/maxresdefault.jpg' ],
+						'thumbnail' => [ 'url' => 'http://img.youtube.com/vi/XHOmBV4js_E/maxresdefault.jpg' ],
+
 					],
 					[
 						'title' => esc_html__( 'Sample Video', 'elementor-pro' ),
 						'youtube_url' => 'https://www.youtube.com/watch?v=XHOmBV4js_E',
 						'duration' => '0:16',
-						'thumbnail' => [ 'url' => 'https://img.youtube.com/vi/XHOmBV4js_E/maxresdefault.jpg' ],
+						'thumbnail' => [ 'url' => 'http://img.youtube.com/vi/XHOmBV4js_E/maxresdefault.jpg' ],
+
 					],
 					[
 						'title' => esc_html__( 'Sample Video', 'elementor-pro' ),
 						'youtube_url' => 'https://www.youtube.com/watch?v=XHOmBV4js_E',
 						'duration' => '0:16',
-						'thumbnail' => [ 'url' => 'https://img.youtube.com/vi/XHOmBV4js_E/maxresdefault.jpg' ],
+						'thumbnail' => [ 'url' => 'http://img.youtube.com/vi/XHOmBV4js_E/maxresdefault.jpg' ],
+
 					],
 				],
 				'frontend_available' => true,
@@ -423,7 +426,7 @@ class Video_Playlist extends Base_Widget {
 				'default' => [
 					'size' => '54',
 				],
-				'size_units' => [ 'px', 'em', 'rem', 'vh', 'custom' ],
+				'size_units' => [ 'px' ],
 				'range' => [
 					'px' => [
 						'min' => 54,
@@ -662,7 +665,7 @@ class Video_Playlist extends Base_Widget {
 			[
 				'label' => esc_html__( 'Height', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em', 'rem', 'vh', 'custom' ],
+				'size_units' => [ 'px', 'vh', 'vw' ],
 				'range' => [
 					'px' => [
 						'min' => 200,
@@ -1260,7 +1263,7 @@ class Video_Playlist extends Base_Widget {
 			[
 				'label' => esc_html__( 'Width', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'size_units' => [ 'px', 'em', '%' ],
 				'selectors' => [
 					'{{WRAPPER}} .e-tabs-items-wrapper .e-section-title' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -1292,18 +1295,13 @@ class Video_Playlist extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'range' => [
-					'px' => [
-						'max' => 20,
-					],
-					'em' => [
-						'max' => 2,
-					],
+					'min' => 0,
+					'max' => 10,
 				],
 				'selectors' => [
-					'{{WRAPPER}} .e-tabs-inner-tabs .e-inner-tabs-wrapper' => '--inner-tabs-border-height: {{SIZE}}{{UNIT}};',
-					'{{WRAPPER}} .e-tabs-inner-tabs .e-inner-tabs-wrapper .e-inner-tab-title.e-inner-tab-active' => 'border-width: 0 0 {{SIZE}}{{UNIT}} 0;',
+					'{{WRAPPER}} .e-tabs-inner-tabs .e-inner-tabs-wrapper' => '--inner-tabs-border-height: {{SIZE}}px;',
+					'{{WRAPPER}} .e-tabs-inner-tabs .e-inner-tabs-wrapper .e-inner-tab-title.e-inner-tab-active' => 'border-width: 0 0 {{SIZE}}px 0;',
 				],
 			]
 		);
@@ -1411,7 +1409,7 @@ class Video_Playlist extends Base_Widget {
 			[
 				'label' => esc_html__( 'Padding', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'size_units' => [ 'px', 'em', '%' ],
 				'selectors' => [
 					'{{WRAPPER}} .e-tabs-inner-tabs .e-inner-tabs-content-wrapper .e-inner-tab-content' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -1962,7 +1960,6 @@ class Video_Playlist extends Base_Widget {
 					case 'section':
 						playlistItemObject.type = playlistItem.type;
 						playlistItemObject.sectionTitle = playlistItem.title;
-						playlistItemObject.isInnerTabsVisible = false;
 					break;
 				}
 

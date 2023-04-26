@@ -2,7 +2,6 @@
 namespace ElementorPro\Modules\Forms\Actions;
 
 use Elementor\Controls_Manager;
-use ElementorPro\Core\Utils;
 use ElementorPro\Modules\Forms\Classes\Action_Base;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -142,9 +141,7 @@ class Discord extends Action_Base {
 		}
 
 		// PHPCS - The form is a visitor action and doesn't require a nonce.
-		$referrer = Utils::_unstable_get_super_global_value( $_POST, 'referrer' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
-
-		$page_url = $referrer ? esc_url( $referrer ) : site_url();
+		$page_url = isset( $_POST['referrer'] ) ? esc_url( $_POST['referrer'] ) : site_url(); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$color = isset( $settings['discord_webhook_color'] ) ? hexdec( ltrim( $settings['discord_webhook_color'], '#' ) ) : hexdec( '9c0244' );
 
 		// Build discord  webhook data
@@ -178,11 +175,7 @@ class Discord extends Action_Base {
 		if ( ! empty( $settings['discord_ts'] ) && 'yes' === $settings['discord_ts'] ) {
 			$embeds['timestamp'] = gmdate( \DateTime::ISO8601 );
 			$embeds['footer'] = [
-				'text' => sprintf(
-					/* translators: %s: Elementor. */
-					esc_html__( 'Powered by %s', 'elementor-pro' ),
-					'Elementor'
-				),
+				'text' => sprintf( esc_html__( 'Powered by %s', 'elementor-pro' ), 'Elementor' ),
 				'icon_url' => is_ssl() ? ELEMENTOR_ASSETS_URL . 'images/logo-icon.png' : null,
 			];
 		}
@@ -199,7 +192,7 @@ class Discord extends Action_Base {
 		]);
 
 		if ( 204 !== (int) wp_remote_retrieve_response_code( $response ) ) {
-			throw new \Exception( 'Webhook error.' );
+			throw new \Exception( esc_html__( 'Webhook Error', 'elementor-pro' ) );
 		}
 	}
 }

@@ -1,8 +1,6 @@
 <?php
 namespace ElementorPro\Modules\AssetsManager\AssetTypes\Icons\IconSets;
 
-use ElementorPro\Core\Utils;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -16,7 +14,6 @@ class Fontello extends Icon_Set_Base {
 
 	protected function prepare() {
 		$this->remove_fontello_styling();
-		$this->dir_name = $this->get_unique_name();
 	}
 
 	public function get_type() {
@@ -32,13 +29,13 @@ class Fontello extends Icon_Set_Base {
 
 	private function remove_fontello_styling() {
 		$filename = $this->directory . 'css/' . $this->get_name() . '.css';
-		$stylesheet = Utils::_unstable_file_get_contents( $filename );
+		$stylesheet = file_get_contents( $filename );
 		$stylesheet = str_replace( [ 'margin-left: .2em;', 'margin-right: .2em;' ], [ '', '' ], $stylesheet );
 		file_put_contents( $filename, $stylesheet );
 	}
 
 	private function get_json() {
-		return json_decode( Utils::_unstable_file_get_contents( $this->directory . $this->data_file ) );
+		return json_decode( file_get_contents( $this->directory . $this->data_file ) );
 	}
 
 	protected function extract_icon_list() {
@@ -51,6 +48,10 @@ class Fontello extends Icon_Set_Base {
 			$icons[] = $icon->css;
 		}
 		return $icons;
+	}
+
+	protected function get_url( $filename = '' ) {
+		return $this->get_file_url( $this->dir_name . $filename );
 	}
 
 	protected function get_prefix() {

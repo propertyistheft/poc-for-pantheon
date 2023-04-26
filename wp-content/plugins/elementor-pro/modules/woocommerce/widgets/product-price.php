@@ -140,7 +140,7 @@ class Product_Price extends Base_Widget {
 			[
 				'label' => esc_html__( 'Spacing', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
+				'size_units' => [ 'px', 'em' ],
 				'range' => [
 					'em' => [
 						'min' => 0,
@@ -161,9 +161,9 @@ class Product_Price extends Base_Widget {
 
 	protected function render() {
 		global $product;
-		$product = $this->get_product();
+		$product = wc_get_product();
 
-		if ( ! $product ) {
+		if ( empty( $product ) ) {
 			return;
 		}
 

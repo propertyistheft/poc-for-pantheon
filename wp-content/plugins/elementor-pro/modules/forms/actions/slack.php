@@ -3,7 +3,6 @@
 namespace ElementorPro\Modules\Forms\Actions;
 
 use Elementor\Controls_Manager;
-use ElementorPro\Core\Utils;
 use ElementorPro\Modules\Forms\Classes\Action_Base;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -164,15 +163,12 @@ class Slack extends Action_Base {
 			$webhook_data['channel'] = $settings['slack_channel'];
 		}
 
-		// The nonce already validated
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$referrer = Utils::_unstable_get_super_global_value( $_POST, 'referrer' );
-
 		$attachment = [
 			'text' => esc_html__( 'A new Form Submission has been received', 'elementor-pro' ),
 			'title' => esc_html__( 'A new Submission', 'elementor-pro' ),
 			'color' => isset( $settings['slack_webhook_color'] ) ? $settings['slack_webhook_color'] : '#D30C5C',
-			'title_link' => esc_url( $referrer ?? site_url() ),
+			// PHPCS - No nonce is required for title_link.
+			'title_link' => esc_url( isset( $_POST['referrer'] ) ? $_POST['referrer'] : site_url() ), // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		];
 
 		if ( ! empty( $settings['slack_title'] ) ) {
@@ -204,11 +200,7 @@ class Slack extends Action_Base {
 
 		if ( ! empty( $settings['slack_add_ts'] ) && 'yes' === $settings['slack_add_ts'] ) {
 			$attachment = array_merge( $attachment, [
-				'footer' => sprintf(
-					/* translators: %s: Elementor. */
-					esc_html__( 'Powered by %s', 'elementor-pro' ),
-					'Elementor'
-				),
+				'footer' => sprintf( esc_html__( 'Powered by %s', 'elementor-pro' ), 'Elementor' ),
 				'footer_icon' => is_ssl() ? ELEMENTOR_ASSETS_URL . 'images/logo-icon.png' : null,
 				'ts' => time(),
 			] );
@@ -226,7 +218,7 @@ class Slack extends Action_Base {
 		] );
 
 		if ( 200 !== (int) wp_remote_retrieve_response_code( $response ) ) {
-			throw new \Exception( 'Webhook error.' );
+			throw new \Exception( esc_html__( 'Webhook Error', 'elementor-pro' ) );
 		}
 	}
 }
