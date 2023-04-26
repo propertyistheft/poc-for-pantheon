@@ -1,5 +1,9 @@
 # Elementor Pro - by Elementor.com
 
+#### 3.10.2 - 2023-01-17
+
+* Fix: Updated compatibility tag for Elementor v3.10
+
 #### 3.10.1 - 2023-01-09
 
 Fix: Preview Could not be loaded error message appears on pages containing the Loop Grid in a header or footer templates

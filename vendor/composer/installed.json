@@ -150,20 +150,20 @@
         },
         {
             "name": "hipdevteam/elementor-pro",
-            "version": "3.10.1",
-            "version_normalized": "3.10.1.0",
+            "version": "3.10.2",
+            "version_normalized": "3.10.2.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.com:hipdevteam/elementor-pro.git",
-                "reference": "4d7f3788a076db2abd3b63bc3a8d80313462a35a"
+                "reference": "5d5aeee59c88efb44cb933499486dd7453aeb290"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/hipdevteam%2Felementor-pro/repository/archive.zip?sha=4d7f3788a076db2abd3b63bc3a8d80313462a35a",
-                "reference": "4d7f3788a076db2abd3b63bc3a8d80313462a35a",
+                "url": "https://gitlab.com/api/v4/projects/hipdevteam%2Felementor-pro/repository/archive.zip?sha=5d5aeee59c88efb44cb933499486dd7453aeb290",
+                "reference": "5d5aeee59c88efb44cb933499486dd7453aeb290",
                 "shasum": ""
             },
-            "time": "2023-01-12T18:48:27+00:00",
+            "time": "2023-01-19T16:38:36+00:00",
             "type": "wordpress-plugin",
             "installation-source": "dist",
             "notification-url": "https://packagist.org/downloads/",
@@ -172,16 +172,16 @@
         },
         {
             "name": "wpackagist-plugin/elementor",
-            "version": "3.10.1",
-            "version_normalized": "3.10.1.0",
+            "version": "3.10.2",
+            "version_normalized": "3.10.2.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/elementor/",
-                "reference": "tags/3.10.1"
+                "reference": "tags/3.10.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/elementor.3.10.1.zip"
+                "url": "https://downloads.wordpress.org/plugin/elementor.3.10.2.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"

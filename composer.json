@@ -22,8 +22,8 @@
       }
     ],
     "require": {
-        "hipdevteam/elementor-pro": "3.10.1",
-        "wpackagist-plugin/elementor": "3.10.1",
+        "hipdevteam/elementor-pro": "3.10.2",
+        "wpackagist-plugin/elementor": "3.10.2",
         "wpackagist-plugin/wp-mail-smtp": "^3.7",
         "wpackagist-plugin/wordpress-importer": "^0.8.0"
     },
