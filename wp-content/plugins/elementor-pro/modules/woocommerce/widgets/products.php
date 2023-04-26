@@ -2,19 +2,21 @@
 namespace ElementorPro\Modules\Woocommerce\Widgets;
 
 use Elementor\Controls_Manager;
-use ElementorPro\Modules\QueryControl\Controls\Group_Control_Query;
 use ElementorPro\Modules\Woocommerce\Classes\Products_Renderer;
 use ElementorPro\Modules\Woocommerce\Classes\Current_Query_Renderer;
 use ElementorPro\Modules\Woocommerce\Module;
 use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
 use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
 use Elementor\Group_Control_Typography;
+use ElementorPro\Modules\Woocommerce\Traits\Products_Trait;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
 class Products extends Products_Base {
+
+	use Products_Trait;
 
 	public function get_name() {
 		return 'woocommerce-products';
@@ -38,7 +40,10 @@ class Products extends Products_Base {
 		];
 	}
 
-	protected function register_query_controls() {
+	/**
+	 * @throws \Exception
+	 */
+	protected function register_query_section() {
 		$this->start_controls_section(
 			'section_query',
 			[
@@ -47,100 +52,7 @@ class Products extends Products_Base {
 			]
 		);
 
-		$this->add_group_control(
-			Group_Control_Query::get_type(),
-			[
-				'name' => Products_Renderer::QUERY_CONTROL_NAME,
-				'post_type' => 'product',
-				'presets' => [ 'include', 'exclude', 'order' ],
-				'fields_options' => [
-					'post_type' => [
-						'default' => 'product',
-						'options' => [
-							'current_query' => esc_html__( 'Current Query', 'elementor-pro' ),
-							'product' => esc_html__( 'Latest Products', 'elementor-pro' ),
-							'sale' => esc_html__( 'Sale', 'elementor-pro' ),
-							'featured' => esc_html__( 'Featured', 'elementor-pro' ),
-							'by_id' => _x( 'Manual Selection', 'Posts Query Control', 'elementor-pro' ),
-							'related' => esc_html__( 'Related', 'elementor-pro' ),
-							'upsells' => esc_html__( 'Upsells', 'elementor-pro' ),
-							'cross_sells' => esc_html__( 'Cross-Sells', 'elementor-pro' ),
-						],
-					],
-					'orderby' => [
-						'default' => 'date',
-						'options' => [
-							'date' => esc_html__( 'Date', 'elementor-pro' ),
-							'title' => esc_html__( 'Title', 'elementor-pro' ),
-							'price' => esc_html__( 'Price', 'elementor-pro' ),
-							'popularity' => esc_html__( 'Popularity', 'elementor-pro' ),
-							'rating' => esc_html__( 'Rating', 'elementor-pro' ),
-							'rand' => esc_html__( 'Random', 'elementor-pro' ),
-							'menu_order' => esc_html__( 'Menu Order', 'elementor-pro' ),
-						],
-					],
-					'exclude' => [
-						'options' => [
-							'current_post' => esc_html__( 'Current Post', 'elementor-pro' ),
-							'manual_selection' => esc_html__( 'Manual Selection', 'elementor-pro' ),
-							'terms' => esc_html__( 'Term', 'elementor-pro' ),
-						],
-					],
-					'include' => [
-						'options' => [
-							'terms' => esc_html__( 'Term', 'elementor-pro' ),
-						],
-					],
-				],
-				'exclude' => [
-					'posts_per_page',
-					'exclude_authors',
-					'authors',
-					'offset',
-					'related_fallback',
-					'related_ids',
-					'query_id',
-					'avoid_duplicates',
-					'ignore_sticky_posts',
-				],
-			]
-		);
-
-		$this->add_control(
-			'related_products_note',
-			[
-				'type' => Controls_Manager::RAW_HTML,
-				'raw' => esc_html__( 'Note: The Related Products Query is available when creating a Single Product template', 'elementor-pro' ),
-				'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
-				'condition' => [
-					Products_Renderer::QUERY_CONTROL_NAME . '_post_type' => 'related',
-				],
-			]
-		);
-
-		$this->add_control(
-			'upsells_products_note',
-			[
-				'type' => Controls_Manager::RAW_HTML,
-				'raw' => esc_html__( 'Note: The Upsells Query is available when creating a Single Product template', 'elementor-pro' ),
-				'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
-				'condition' => [
-					Products_Renderer::QUERY_CONTROL_NAME . '_post_type' => 'upsells',
-				],
-			]
-		);
-
-		$this->add_control(
-			'cross_sells_products_note',
-			[
-				'type' => Controls_Manager::RAW_HTML,
-				'raw' => esc_html__( 'Note: The Cross-Sells Query is available when creating a Cart page', 'elementor-pro' ),
-				'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
-				'condition' => [
-					Products_Renderer::QUERY_CONTROL_NAME . '_post_type' => 'cross_sells',
-				],
-			]
-		);
+		$this->add_query_controls( Products_Renderer::QUERY_CONTROL_NAME );
 
 		$this->end_controls_section();
 	}
@@ -178,7 +90,7 @@ class Products extends Products_Base {
 				'default' => '',
 				'condition' => [
 					Products_Renderer::QUERY_CONTROL_NAME . '_post_type!' => [
-						'related',
+						'related_products',
 						'upsells',
 						'cross_sells',
 					],
@@ -225,7 +137,7 @@ class Products extends Products_Base {
 
 		$this->end_controls_section();
 
-		$this->register_query_controls();
+		$this->register_query_section();
 
 		$this->start_controls_section(
 			'section_products_title',
@@ -237,7 +149,7 @@ class Products extends Products_Base {
 						[
 							'name' => Products_Renderer::QUERY_CONTROL_NAME . '_post_type',
 							'operator' => '=',
-							'value' => 'related',
+							'value' => 'related_products',
 						],
 						[
 							'name' => Products_Renderer::QUERY_CONTROL_NAME . '_post_type',
@@ -268,7 +180,7 @@ class Products extends Products_Base {
 		);
 
 		$query_type_strings = [
-			'related' => esc_html__( 'Related Products', 'elementor-pro' ),
+			'related_products' => esc_html__( 'Related Products', 'elementor-pro' ),
 			'upsells' => esc_html__( 'You may also like...', 'elementor-pro' ),
 			'cross_sells' => esc_html__( 'You may be interested in...', 'elementor-pro' ),
 		];
@@ -345,7 +257,7 @@ class Products extends Products_Base {
 						[
 							'name' => Products_Renderer::QUERY_CONTROL_NAME . '_post_type',
 							'operator' => '=',
-							'value' => 'related',
+							'value' => 'related_products',
 						],
 						[
 							'name' => Products_Renderer::QUERY_CONTROL_NAME . '_post_type',
@@ -380,7 +292,7 @@ class Products extends Products_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'products_title_typography',
-				'selector' => '{{WRAPPER}}.products-heading-show .related > h2, {{WRAPPER}}.products-heading-show .upsells > h2, {{WRAPPER}}.products-heading-show .cross-sells > h2',
+				'selector' => '{{WRAPPER}}.products-heading-show .related-products > h2, {{WRAPPER}}.products-heading-show .upsells > h2, {{WRAPPER}}.products-heading-show .cross-sells > h2',
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_PRIMARY,
 				],
@@ -392,7 +304,7 @@ class Products extends Products_Base {
 			[
 				'label' => esc_html__( 'Spacing', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px' ],
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
 						'min' => 0,
@@ -411,13 +323,11 @@ class Products extends Products_Base {
 		$this->end_injection();
 	}
 
-	protected function get_shortcode_object( $settings ) {
+	public static function get_shortcode_object( $settings ) {
 		if ( 'current_query' === $settings[ Products_Renderer::QUERY_CONTROL_NAME . '_post_type' ] ) {
-			$type = 'current_query';
-			return new Current_Query_Renderer( $settings, $type );
+			return new Current_Query_Renderer( $settings, 'current_query' );
 		}
-		$type = 'products';
-		return new Products_Renderer( $settings, $type );
+		return new Products_Renderer( $settings, 'products' );
 	}
 
 	protected function render() {
@@ -434,7 +344,7 @@ class Products extends Products_Base {
 			add_filter( 'woocommerce_loop_add_to_cart_link', [ $this, 'add_to_cart_wrapper' ], 10, 1 );
 		}
 
-		if ( 'related' === $post_type_setting ) {
+		if ( 'related_products' === $post_type_setting ) {
 			$content = Module::get_products_related_content( $settings );
 		} elseif ( 'upsells' === $post_type_setting ) {
 			$content = Module::get_upsells_content( $settings );
@@ -446,7 +356,7 @@ class Products extends Products_Base {
 				$GLOBALS['post'] = null; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 			}
 
-			$shortcode = $this->get_shortcode_object( $settings );
+			$shortcode = static::get_shortcode_object( $settings );
 			$content = $shortcode->get_content();
 		}
 

@@ -304,7 +304,7 @@ class Table_Of_Contents extends Base_Widget {
 			}
 
 			$minimized_on_options[ $breakpoint_key ] = sprintf(
-				/* translators: 1: `<` character, 2: Breakpoint value. */
+				/* translators: 1: Breakpoint label, 2: `<` character, 3: Breakpoint value. */
 				esc_html__( '%1$s (%2$s %3$dpx)', 'elementor-pro' ),
 				$breakpoint->get_label(),
 				'<',
@@ -402,6 +402,15 @@ class Table_Of_Contents extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'range' => [
+					'px' => [
+						'max' => 20,
+					],
+					'em' => [
+						'max' => 2,
+					],
+				],
 				'selectors' => [
 					'{{WRAPPER}}' => '--box-border-width: {{SIZE}}{{UNIT}}',
 				],
@@ -413,6 +422,7 @@ class Table_Of_Contents extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
 					'{{WRAPPER}}' => '--box-border-radius: {{SIZE}}{{UNIT}}',
 				],
@@ -424,6 +434,7 @@ class Table_Of_Contents extends Base_Widget {
 			[
 				'label' => esc_html__( 'Padding', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
 					'{{WRAPPER}}' => '--box-padding: {{SIZE}}{{UNIT}}',
 				],
@@ -435,7 +446,7 @@ class Table_Of_Contents extends Base_Widget {
 			[
 				'label' => esc_html__( 'Min Height', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'vh' ],
+				'size_units' => [ 'px', 'em', 'rem', 'vh', 'custom' ],
 				'range' => [
 					'px' => [
 						'min' => 0,
@@ -522,6 +533,7 @@ class Table_Of_Contents extends Base_Widget {
 			[
 				'label' => esc_html__( 'Separator Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'selectors' => [
 					'{{WRAPPER}}' => '--separator-width: {{SIZE}}{{UNIT}}',
 				],
@@ -543,7 +555,7 @@ class Table_Of_Contents extends Base_Widget {
 			[
 				'label' => esc_html__( 'Max Height', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'vh' ],
+				'size_units' => [ 'px', 'em', 'rem', 'vh', 'custom' ],
 				'range' => [
 					'px' => [
 						'min' => 0,
@@ -572,7 +584,7 @@ class Table_Of_Contents extends Base_Widget {
 			[
 				'label' => esc_html__( 'Indent', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em' ],
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'default' => [
 					'unit' => 'em',
 				],
@@ -711,7 +723,7 @@ class Table_Of_Contents extends Base_Widget {
 			[
 				'label' => esc_html__( 'Size', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em' ],
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'selectors' => [
 					'{{WRAPPER}}' => '--marker-size: {{SIZE}}{{UNIT}}',
 				],

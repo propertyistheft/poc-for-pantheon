@@ -68,9 +68,6 @@ class Group_Control_Query extends Group_Control_Base {
 				'post_type!' => [
 					'current_query',
 					'by_id',
-					'related',
-					'upsells',
-					'cross_sells',
 				],
 			],
 		];
@@ -104,9 +101,6 @@ class Group_Control_Query extends Group_Control_Base {
 				'post_type!' => [
 					'by_id',
 					'current_query',
-					'related',
-					'upsells',
-					'cross_sells',
 				],
 			],
 			'label_block' => true,
@@ -131,9 +125,6 @@ class Group_Control_Query extends Group_Control_Base {
 				'post_type!' => [
 					'by_id',
 					'current_query',
-					'related',
-					'upsells',
-					'cross_sells',
 				],
 			],
 			'tabs_wrapper' => $tabs_wrapper,
@@ -155,9 +146,6 @@ class Group_Control_Query extends Group_Control_Base {
 				'post_type!' => [
 					'by_id',
 					'current_query',
-					'related',
-					'upsells',
-					'cross_sells',
 				],
 			],
 			'tabs_wrapper' => $tabs_wrapper,
@@ -173,9 +161,6 @@ class Group_Control_Query extends Group_Control_Base {
 				'post_type!' => [
 					'by_id',
 					'current_query',
-					'related',
-					'upsells',
-					'cross_sells',
 				],
 			],
 		];
@@ -194,9 +179,6 @@ class Group_Control_Query extends Group_Control_Base {
 				'post_type!' => [
 					'by_id',
 					'current_query',
-					'related',
-					'upsells',
-					'cross_sells',
 				],
 			],
 			'label_block' => true,
@@ -218,9 +200,6 @@ class Group_Control_Query extends Group_Control_Base {
 				'post_type!' => [
 					'by_id',
 					'current_query',
-					'related',
-					'upsells',
-					'cross_sells',
 				],
 			],
 			'tabs_wrapper' => $tabs_wrapper,
@@ -244,9 +223,6 @@ class Group_Control_Query extends Group_Control_Base {
 				'post_type!' => [
 					'by_id',
 					'current_query',
-					'related',
-					'upsells',
-					'cross_sells',
 				],
 			],
 			'tabs_wrapper' => $tabs_wrapper,
@@ -269,9 +245,6 @@ class Group_Control_Query extends Group_Control_Base {
 				'post_type!' => [
 					'by_id',
 					'current_query',
-					'related',
-					'upsells',
-					'cross_sells',
 				],
 			],
 			'tabs_wrapper' => $tabs_wrapper,
@@ -290,9 +263,6 @@ class Group_Control_Query extends Group_Control_Base {
 				'post_type!' => [
 					'by_id',
 					'current_query',
-					'related',
-					'upsells',
-					'cross_sells',
 				],
 			],
 		];
@@ -305,9 +275,6 @@ class Group_Control_Query extends Group_Control_Base {
 				'post_type!' => [
 					'by_id',
 					'current_query',
-					'related',
-					'upsells',
-					'cross_sells',
 				],
 			],
 			'description' => esc_html__( 'Use this setting to skip over posts (e.g. \'2\' to skip over 2 posts).', 'elementor-pro' ),
@@ -334,9 +301,6 @@ class Group_Control_Query extends Group_Control_Base {
 				'post_type!' => [
 					'by_id',
 					'current_query',
-					'related',
-					'upsells',
-					'cross_sells',
 				],
 			],
 			'separator' => 'before',
@@ -354,9 +318,6 @@ class Group_Control_Query extends Group_Control_Base {
 				'post_type!' => [
 					'by_id',
 					'current_query',
-					'related',
-					'upsells',
-					'cross_sells',
 				],
 			],
 			'description' => esc_html__( 'Setting a ‘Before’ date will show all the posts published until the chosen date (inclusive).', 'elementor-pro' ),
@@ -374,9 +335,6 @@ class Group_Control_Query extends Group_Control_Base {
 				'post_type!' => [
 					'by_id',
 					'current_query',
-					'related',
-					'upsells',
-					'cross_sells',
 				],
 			],
 			'description' => esc_html__( 'Setting an ‘After’ date will show all the posts published since the chosen date (inclusive).', 'elementor-pro' ),
@@ -390,6 +348,8 @@ class Group_Control_Query extends Group_Control_Base {
 				'post_date' => esc_html__( 'Date', 'elementor-pro' ),
 				'post_title' => esc_html__( 'Title', 'elementor-pro' ),
 				'menu_order' => esc_html__( 'Menu Order', 'elementor-pro' ),
+				'modified' => esc_html__( 'Last Modified', 'elementor-pro' ),
+				'comment_count' => esc_html__( 'Comment Count', 'elementor-pro' ),
 				'rand' => esc_html__( 'Random', 'elementor-pro' ),
 			],
 			'condition' => [
