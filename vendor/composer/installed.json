@@ -150,20 +150,20 @@
         },
         {
             "name": "hipdevteam/elementor-pro",
-            "version": "3.9.0",
-            "version_normalized": "3.9.0.0",
+            "version": "3.10.1",
+            "version_normalized": "3.10.1.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.com:hipdevteam/elementor-pro.git",
-                "reference": "e0a04b5a4cda4fa113d38d716b2663d645d5ca85"
+                "reference": "4d7f3788a076db2abd3b63bc3a8d80313462a35a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/hipdevteam%2Felementor-pro/repository/archive.zip?sha=e0a04b5a4cda4fa113d38d716b2663d645d5ca85",
-                "reference": "e0a04b5a4cda4fa113d38d716b2663d645d5ca85",
+                "url": "https://gitlab.com/api/v4/projects/hipdevteam%2Felementor-pro/repository/archive.zip?sha=4d7f3788a076db2abd3b63bc3a8d80313462a35a",
+                "reference": "4d7f3788a076db2abd3b63bc3a8d80313462a35a",
                 "shasum": ""
             },
-            "time": "2022-12-09T02:09:52+00:00",
+            "time": "2023-01-12T18:48:27+00:00",
             "type": "wordpress-plugin",
             "installation-source": "dist",
             "notification-url": "https://packagist.org/downloads/",
@@ -172,16 +172,16 @@
         },
         {
             "name": "wpackagist-plugin/elementor",
-            "version": "3.9.0",
-            "version_normalized": "3.9.0.0",
+            "version": "3.10.1",
+            "version_normalized": "3.10.1.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/elementor/",
-                "reference": "tags/3.9.0"
+                "reference": "tags/3.10.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/elementor.3.9.0.zip"
+                "url": "https://downloads.wordpress.org/plugin/elementor.3.10.1.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"

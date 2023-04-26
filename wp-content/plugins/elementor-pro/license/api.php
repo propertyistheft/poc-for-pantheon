@@ -264,7 +264,7 @@ class API {
 
 			$info_data = self::remote_post( 'pro/info', $body_args );
 
-			if ( empty( $info_data['new_version'] ) ) {
+			if ( is_wp_error( $info_data ) || empty( $info_data['new_version'] ) ) {
 				return new \WP_Error( esc_html__( 'HTTP Error', 'elementor-pro' ) );
 			}
 
