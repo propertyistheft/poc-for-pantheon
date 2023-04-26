@@ -2,6 +2,7 @@
 namespace ElementorPro\Modules\Woocommerce\Tags;
 
 use Elementor\Controls_Manager;
+use ElementorPro\Modules\Woocommerce\Tags\Traits\Tag_Product_Id;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -64,10 +65,9 @@ class Product_Terms extends Base_Tag {
 	}
 
 	public function render() {
-		$settings = $this->get_settings_for_display();
+		$settings = $this->get_settings();
 
-		$product = $this->get_product( $settings['product_id'] );
-
+		$product = wc_get_product( $settings['product_id'] );
 		if ( ! $product ) {
 			return;
 		}

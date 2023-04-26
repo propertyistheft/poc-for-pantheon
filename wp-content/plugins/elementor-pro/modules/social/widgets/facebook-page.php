@@ -108,6 +108,7 @@ class Facebook_Page extends Base_Widget {
 				'label' => esc_html__( 'Height', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
 				'default' => [
+					'unit' => 'px',
 					'size' => 500,
 				],
 				'range' => [

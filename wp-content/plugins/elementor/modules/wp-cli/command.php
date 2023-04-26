@@ -78,7 +78,7 @@ class Command extends \WP_CLI_Command {
 	 * Replace old URLs with new URLs in all Elementor pages.
 	 *
 	 * [--force]
-	 *      Suppress error messages. instead, return "0 database rows affected.".
+	 *      Suppress error messages. instead, return "0 affected rows.".
 	 *
 	 * ## EXAMPLES
 	 *
@@ -105,7 +105,7 @@ class Command extends \WP_CLI_Command {
 			\WP_CLI::success( $results );
 		} catch ( \Exception $e ) {
 			if ( isset( $assoc_args['force'] ) ) {
-				\WP_CLI::success( '0 database rows affected.' );
+				\WP_CLI::success( '0 rows affected.' );
 			} else {
 				\WP_CLI::error( $e->getMessage() );
 			}

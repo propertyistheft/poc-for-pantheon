@@ -234,7 +234,7 @@ class TextPath extends Widget_Base {
 			[
 				'label' => esc_html__( 'Size', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'size_units' => [ '%', 'px' ],
 				'range' => [
 					'%' => [
 						'min' => 0,
@@ -248,12 +248,15 @@ class TextPath extends Widget_Base {
 					],
 				],
 				'default' => [
+					'unit' => 'px',
 					'size' => 500,
 				],
 				'tablet_default' => [
+					'unit' => 'px',
 					'size' => 500,
 				],
 				'mobile_default' => [
+					'unit' => 'px',
 					'size' => 500,
 				],
 				'selectors' => [
@@ -267,15 +270,25 @@ class TextPath extends Widget_Base {
 			[
 				'label' => esc_html__( 'Rotate', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'deg', 'grad', 'rad', 'turn', 'custom' ],
+				'size_units' => [ 'deg' ],
+				'range' => [
+					'deg' => [
+						'min' => 0,
+						'max' => 360,
+						'step' => 1,
+					],
+				],
 				'default' => [
 					'unit' => 'deg',
+					'size' => '',
 				],
 				'tablet_default' => [
 					'unit' => 'deg',
+					'size' => '',
 				],
 				'mobile_default' => [
 					'unit' => 'deg',
+					'size' => '',
 				],
 				'selectors' => [
 					'{{WRAPPER}}' => '--rotate: {{SIZE}}{{UNIT}};',
@@ -331,26 +344,24 @@ class TextPath extends Widget_Base {
 			[
 				'label' => esc_html__( 'Word Spacing', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
+				'size_units' => [ 'px' ],
 				'range' => [
 					'px' => [
 						'min' => -20,
 						'max' => 20,
 						'step' => 1,
 					],
-					'em' => [
-						'min' => -1,
-						'max' => 1,
-						'step' => 0.1,
-					],
 				],
 				'default' => [
+					'unit' => 'px',
 					'size' => '',
 				],
 				'tablet_default' => [
+					'unit' => 'px',
 					'size' => '',
 				],
 				'mobile_default' => [
+					'unit' => 'px',
 					'size' => '',
 				],
 				'selectors' => [
@@ -442,10 +453,16 @@ class TextPath extends Widget_Base {
 			[
 				'label' => esc_html__( 'Transition Duration', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 's', 'ms', 'custom' ],
 				'default' => [
-					'unit' => 's',
 					'size' => 0.3,
+					'unit' => 's',
+				],
+				'range' => [
+					's' => [
+						'min' => 0,
+						'max' => 3,
+						'step' => 0.1,
+					],
 				],
 				'selectors' => [
 					'{{WRAPPER}}' => '--transition: {{SIZE}}{{UNIT}}',
@@ -524,6 +541,7 @@ class TextPath extends Widget_Base {
 				'type' => Controls_Manager::SLIDER,
 				'default' => [
 					'size' => 1,
+					'unit' => 'px',
 				],
 				'range' => [
 					'px' => [
@@ -589,6 +607,7 @@ class TextPath extends Widget_Base {
 				'type' => Controls_Manager::SLIDER,
 				'default' => [
 					'size' => '',
+					'unit' => 'px',
 				],
 				'range' => [
 					'px' => [
@@ -608,10 +627,16 @@ class TextPath extends Widget_Base {
 			[
 				'label' => esc_html__( 'Transition Duration', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 's', 'ms', 'custom' ],
 				'default' => [
-					'unit' => 's',
 					'size' => 0.3,
+					'unit' => 's',
+				],
+				'range' => [
+					's' => [
+						'min' => 0,
+						'max' => 3,
+						'step' => 0.1,
+					],
 				],
 				'selectors' => [
 					'{{WRAPPER}}' => '--stroke-transition: {{SIZE}}{{UNIT}}',
@@ -661,7 +686,6 @@ class TextPath extends Widget_Base {
 			'class' => 'e-text-path',
 			'data-text' => esc_attr( $settings['text'] ),
 			'data-url' => esc_url( $path_url ),
-			'data-link-url' => esc_url( $settings['link']['url'] ?? '' ),
 		] );
 
 		// Add hover animation.

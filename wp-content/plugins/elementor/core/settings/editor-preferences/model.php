@@ -105,7 +105,7 @@ class Model extends BaseModel {
 		$this->add_control(
 			'responsive_heading',
 			[
-				'label' => esc_html__( 'Responsive Preview', 'elementor' ),
+				'label' => __( 'Responsive Preview', 'elementor' ),
 				'type' => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -114,10 +114,10 @@ class Model extends BaseModel {
 		$this->add_control(
 			'show_hidden_elements',
 			[
-				'label' => esc_html__( 'Hidden Elements', 'elementor' ),
+				'label' => __( 'Hidden Elements', 'elementor' ),
 				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Show', 'elementor' ),
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
+				'label_on' => __( 'Show', 'elementor' ),
+				'label_off' => __( 'Hide', 'elementor' ),
 				'default' => 'yes',
 			]
 		);

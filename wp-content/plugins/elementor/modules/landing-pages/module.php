@@ -23,7 +23,7 @@ class Module extends BaseModule {
 	const CPT = 'e-landing-page';
 	const ADMIN_PAGE_SLUG = 'edit.php?post_type=' . self::CPT;
 
-	private $has_pages = null;
+	private $posts;
 	private $trashed_posts;
 	private $new_lp_url;
 	private $permalink_structure;
@@ -84,11 +84,21 @@ class Module extends BaseModule {
 		return $this->trashed_posts;
 	}
 
-	private function has_landing_pages() {
-		if ( null !== $this->has_pages ) {
-			return $this->has_pages;
+	/**
+	 * Get Landing Pages Posts
+	 *
+	 * Returns the posts property of a WP_Query run for posts with the Landing Pages CPT.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @return array posts
+	 */
+	private function get_landing_page_posts() {
+		if ( $this->posts ) {
+			return $this->posts;
 		}
 
+		// `'posts_per_page' => 1` is because this is only used as an indicator to whether there are any landing pages.
 		$posts_query = new \WP_Query( [
 			'no_found_rows' => true,
 			'post_type' => self::CPT,
@@ -98,9 +108,9 @@ class Module extends BaseModule {
 			'meta_value' => self::DOCUMENT_TYPE,
 		] );
 
-		$this->has_pages = $posts_query->post_count > 0;
+		$this->posts = $posts_query->posts;
 
-		return $this->has_pages;
+		return $this->posts;
 	}
 
 	/**
@@ -120,7 +130,11 @@ class Module extends BaseModule {
 	}
 
 	private function get_menu_args() {
-		if ( $this->has_landing_pages() ) {
+		$posts = $this->get_landing_page_posts();
+
+		// If there are no Landing Pages, show the "Create Your First Landing Page" page.
+		// If there are, show the pages table.
+		if ( ! empty( $posts ) ) {
 			$menu_slug = self::ADMIN_PAGE_SLUG;
 			$function = null;
 		} else {
@@ -251,7 +265,7 @@ class Module extends BaseModule {
 				'addNewLandingPageUrl' => $this->get_add_new_landing_page_url(),
 			],
 			'landingPages' => [
-				'landingPagesHasPages' => $this->has_landing_pages(),
+				'landingPagesHasPages' => [] !== $this->get_landing_page_posts(),
 				'isLandingPageAdminEdit' => $this->is_landing_page_admin_edit(),
 			],
 		];

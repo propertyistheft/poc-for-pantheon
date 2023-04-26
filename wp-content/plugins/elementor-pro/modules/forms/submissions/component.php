@@ -4,10 +4,8 @@ namespace ElementorPro\Modules\Forms\Submissions;
 use Elementor\Core\Admin\Menu\Admin_Menu_Manager;
 use Elementor\Core\Admin\Menu\Main as MainMenu;
 use Elementor\Settings;
-use ElementorPro\License\API;
 use ElementorPro\Modules\Forms\Registrars\Form_Actions_Registrar;
 use ElementorPro\Modules\Forms\Submissions\AdminMenuItems\Submissions_Menu_Item;
-use ElementorPro\Modules\Forms\Submissions\AdminMenuItems\Submissions_Promotion_Menu_Item;
 use ElementorPro\Plugin;
 use ElementorPro\Base\Module_Base;
 use ElementorPro\Modules\Forms\Submissions\Database\Query;
@@ -64,15 +62,7 @@ class Component extends Module_Base {
 	 * Register admin menu
 	 */
 	private function register_admin_menu_legacy( Admin_Menu_Manager $admin_menu ) {
-		$admin_menu->register( static::PAGE_ID,
-			$this->can_use_submissions()
-				? new Submissions_Menu_Item()
-				: new Submissions_Promotion_Menu_Item()
-		);
-	}
-
-	private function can_use_submissions() : bool {
-		return API::is_license_active() && ! API::is_license_expired();
+		$admin_menu->register( static::PAGE_ID, new Submissions_Menu_Item() );
 	}
 
 	private function render_admin_page() {

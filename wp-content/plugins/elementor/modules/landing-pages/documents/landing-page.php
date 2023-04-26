@@ -51,7 +51,7 @@ class Landing_Page extends PageBase {
 	 * @static
 	 */
 	public static function get_plural_title() {
-		return esc_html__( 'Landing Pages', 'elementor' );
+		return __( 'Landing Pages', 'elementor' );
 	}
 
 	public static function get_create_url() {

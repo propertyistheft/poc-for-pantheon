@@ -190,7 +190,6 @@ class Categories extends Base_Widget {
 			[
 				'label'     => esc_html__( 'Columns Gap', 'elementor-pro' ),
 				'type'      => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'default'   => [
 					'size' => 20,
 				],
@@ -211,7 +210,6 @@ class Categories extends Base_Widget {
 			[
 				'label'     => esc_html__( 'Rows Gap', 'elementor-pro' ),
 				'type'      => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'default'   => [
 					'size' => 40,
 				],
@@ -275,7 +273,7 @@ class Categories extends Base_Widget {
 			[
 				'label'      => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type'       => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
+				'size_units' => [ 'px', '%' ],
 				'selectors'  => [
 					'{{WRAPPER}} a > img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
 				],
@@ -287,7 +285,7 @@ class Categories extends Base_Widget {
 			[
 				'label'      => esc_html__( 'Spacing', 'elementor-pro' ),
 				'type'       => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
+				'size_units' => [ 'px', 'em' ],
 				'selectors'  => [
 					'{{WRAPPER}} a > img' => 'margin-bottom: {{SIZE}}{{UNIT}}',
 				],
@@ -394,8 +392,7 @@ class Categories extends Base_Widget {
 		if ( $product_categories_html ) {
 			$product_categories_html = str_replace( '<ul class="products', '<ul class="products elementor-grid', $product_categories_html );
 
-			// PHPCS - Doesn't need to be escaped since it's a WooCommerce template, and 3rd party plugins might hook into it.
-			echo $product_categories_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo wp_kses_post( $product_categories_html );
 		}
 	}
 

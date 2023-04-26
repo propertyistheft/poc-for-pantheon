@@ -6,7 +6,6 @@ use Elementor\Data\V2\Base\Exceptions\Error_404;
 use Elementor\Data\V2\Base\Exceptions\WP_Error_Exception;
 use Elementor\Modules\Library\User_Favorites;
 use Elementor\App\Modules\KitLibrary\Connect\Kit_Library;
-use Elementor\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -19,7 +18,7 @@ class Repository {
 	 */
 	const SUBSCRIPTION_PLAN_FREE_TAG = 'Free';
 
-	const TAXONOMIES_KEYS = [ 'tags', 'categories', 'main_category', 'third_category', 'features', 'types' ];
+	const TAXONOMIES_KEYS = [ 'tags', 'categories', 'features', 'types' ];
 
 	const KITS_CACHE_KEY = 'elementor_remote_kits';
 	const KITS_TAXONOMIES_CACHE_KEY = 'elementor_remote_kits_taxonomies';
@@ -143,7 +142,7 @@ class Repository {
 		$kit = $this->find( $id, [ 'manifest_included' => false ] );
 
 		if ( ! $kit ) {
-			throw new Error_404( esc_html__( 'Kit not found', 'elementor' ), 'kit_not_found' );
+			throw new Error_404( __( 'Kit not found', 'elementor' ), 'kit_not_found' );
 		}
 
 		$this->user_favorites->add( 'elementor', 'kits', $kit['id'] );
@@ -163,7 +162,7 @@ class Repository {
 		$kit = $this->find( $id, [ 'manifest_included' => false ] );
 
 		if ( ! $kit ) {
-			throw new Error_404( esc_html__( 'Kit not found', 'elementor' ), 'kit_not_found' );
+			throw new Error_404( __( 'Kit not found', 'elementor' ), 'kit_not_found' );
 		}
 
 		$this->user_favorites->remove( 'elementor', 'kits', $kit['id'] );
@@ -181,26 +180,8 @@ class Repository {
 	private function get_kits_data( $force_api_request = false ) {
 		$data = get_transient( static::KITS_CACHE_KEY );
 
-		$experiments_manager = Plugin::$instance->experiments;
-		$kits_editor_layout_type = $experiments_manager->is_feature_active( 'container' ) ? 'container_flexbox' : '';
-
 		if ( ! $data || $force_api_request ) {
-			$args = [
-				'body' => [
-					'editor_layout_type' => $kits_editor_layout_type,
-				],
-			];
-
-			/**
-			 * Filters arguments for the request to the Kits API.
-			 *
-			 * @since 3.11.0
-			 *
-			 * @param array[] $args Array of http arguments.
-			 */
-			$args = apply_filters( 'elementor/kit-library/get-kits-data/args', $args );
-
-			$data = $this->api->get_all( $args );
+			$data = $this->api->get_all();
 
 			if ( is_wp_error( $data ) ) {
 				throw new WP_Error_Exception( $data );
@@ -242,10 +223,8 @@ class Repository {
 	private function transform_kit_api_response( $kit, $manifest = null ) {
 		$subscription_plan_tag = $this->subscription_plans->get( $kit->access_level );
 
-		$taxonomies = ( new Collection( ( (array) $kit )['taxonomies'] ) )
-			->filter( function ( $taxonomy ) {
-				return in_array( $taxonomy->type, self::TAXONOMIES_KEYS );
-			} )
+		$taxonomies = ( new Collection( (array) $kit ) )
+			->only( static::TAXONOMIES_KEYS )
 			->flatten()
 			->pluck( 'name' )
 			->push( $subscription_plan_tag ? $subscription_plan_tag : self::SUBSCRIPTION_PLAN_FREE_TAG );
@@ -320,9 +299,5 @@ class Repository {
 		$this->api = $kit_library;
 		$this->user_favorites = $user_favorites;
 		$this->subscription_plans = $subscription_plans;
-	}
-
-	public static function clear_cache() {
-		delete_transient( static::KITS_CACHE_KEY );
 	}
 }

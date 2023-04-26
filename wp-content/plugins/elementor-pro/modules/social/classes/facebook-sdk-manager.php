@@ -4,7 +4,6 @@ namespace ElementorPro\Modules\Social\Classes;
 use Elementor\Controls_Manager;
 use Elementor\Settings;
 use Elementor\Widget_Base;
-use ElementorPro\Core\Utils;
 use ElementorPro\Modules\Social\Module;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -158,12 +157,8 @@ class Facebook_SDK_Manager {
 	private function validate_sdk() {
 		$errors = [];
 
-		// The nonce already validated on the options page,
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$app_id = Utils::_unstable_get_super_global_value( $_POST, 'elementor_pro_facebook_app_id' );
-
-		if ( $app_id ) {
-			$response = wp_remote_get( 'https://graph.facebook.com/' . $app_id );
+		if ( ! empty( $_POST['elementor_pro_facebook_app_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$response = wp_remote_get( 'https://graph.facebook.com/' . $_POST['elementor_pro_facebook_app_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 			if ( is_wp_error( $response ) || 200 !== (int) wp_remote_retrieve_response_code( $response ) ) {
 				$errors[] = esc_html__( 'Facebook App ID is not valid', 'elementor-pro' );

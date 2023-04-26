@@ -33,8 +33,6 @@ class Icons_Manager {
 
 	protected $icon_types = [];
 
-	private $has_icons = null;
-
 	/**
 	 * get a font type object for a given type
 	 *
@@ -135,18 +133,12 @@ class Icons_Manager {
 	}
 
 	private function has_icons() {
-		if ( null !== $this->has_icons ) {
-			return $this->has_icons;
-		}
-
-		$existing_icons = new \WP_Query( [
+		$icons = get_posts( [
 			'post_type' => static::CPT,
-			'posts_per_page' => 1,
+			'posts_per_page' => 1, // Avoid fetching too much data
 		] );
 
-		$this->has_icons = $existing_icons->post_count > 0;
-
-		return $this->has_icons;
+		return ! empty( $icons );
 	}
 
 	public function redirect_admin_old_page_to_new() {

@@ -1,4 +1,4 @@
-/*! elementor-pro - v3.12.2 - 09-04-2023 */
+/*! elementor-pro - v3.8.0 - 30-10-2022 */
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
@@ -81,6 +81,7 @@ var __webpack_exports__ = {};
 
 
 var _editor = __webpack_require__(/*! ./editor/editor */ "../tests/qunit/editor/editor.js");
+
 new _editor.EditorBootstrapPro();
 })();
 

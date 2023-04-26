@@ -44,6 +44,6 @@ class Section extends Library_Document {
 	}
 
 	public static function get_plural_title() {
-		return esc_html__( 'Sections', 'elementor' );
+		return __( 'Sections', 'elementor' );
 	}
 }

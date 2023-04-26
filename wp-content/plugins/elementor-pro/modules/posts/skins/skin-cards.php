@@ -183,7 +183,6 @@ class Skin_Cards extends Skin_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
 						'max' => 50,
@@ -203,7 +202,6 @@ class Skin_Cards extends Skin_Base {
 			[
 				'label' => esc_html__( 'Size', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
 						'min' => 5,
@@ -224,7 +222,6 @@ class Skin_Cards extends Skin_Base {
 			[
 				'label' => esc_html__( 'Margin', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'range' => [
 					'px' => [
 						'max' => 50,
@@ -275,7 +272,6 @@ class Skin_Cards extends Skin_Base {
 			[
 				'label' => esc_html__( 'Size', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
 						'min' => 20,
@@ -378,13 +374,11 @@ class Skin_Cards extends Skin_Base {
 			[
 				'label' => esc_html__( 'Border Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'size_units' => [ 'px' ],
 				'range' => [
 					'px' => [
-						'max' => 20,
-					],
-					'em' => [
-						'max' => 2,
+						'min' => 0,
+						'max' => 15,
 					],
 				],
 				'selectors' => [
@@ -398,7 +392,7 @@ class Skin_Cards extends Skin_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
+				'size_units' => [ 'px', '%' ],
 				'range' => [
 					'px' => [
 						'min' => 0,
@@ -416,7 +410,7 @@ class Skin_Cards extends Skin_Base {
 			[
 				'label' => esc_html__( 'Horizontal Padding', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
+				'size_units' => [ 'px' ],
 				'range' => [
 					'px' => [
 						'min' => 0,
@@ -436,7 +430,7 @@ class Skin_Cards extends Skin_Base {
 			[
 				'label' => esc_html__( 'Vertical Padding', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
+				'size_units' => [ 'px' ],
 				'range' => [
 					'px' => [
 						'min' => 0,

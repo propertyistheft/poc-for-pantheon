@@ -127,10 +127,7 @@ class Recaptcha_Handler {
 
 		$field = current( $fields );
 
-		// PHPCS - response protected by recaptcha secret
-		$recaptcha_response = Utils::_unstable_get_super_global_value( $_POST, 'g-recaptcha-response' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
-
-		if ( empty( $recaptcha_response ) ) {
+		if ( empty( $_POST['g-recaptcha-response'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			$ajax_handler->add_error( $field['id'], esc_html__( 'The Captcha field cannot be blank. Please enter a value.', 'elementor-pro' ) );
 
 			return;
@@ -143,6 +140,8 @@ class Recaptcha_Handler {
 			'invalid-input-response' => esc_html__( 'The response parameter is invalid or malformed.', 'elementor-pro' ),
 		];
 
+		// PHPCS - response protected by recaptcha secret
+		$recaptcha_response = $_POST['g-recaptcha-response']; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$recaptcha_secret = static::get_secret_key();
 		$client_ip = Utils::get_client_ip();
 

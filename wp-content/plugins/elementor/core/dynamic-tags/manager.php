@@ -480,13 +480,9 @@ class Manager {
 	 * @param Post $css_file
 	 */
 	public function after_enqueue_post_css( $css_file ) {
-		$post_id = $css_file->get_post_id();
-		$should_enqueue = apply_filters( 'elementor/css-file/dynamic/should_enqueue', true, $post_id );
+		$css_file = Dynamic_CSS::create( $css_file->get_post_id(), $css_file );
 
-		if ( $should_enqueue ) {
-			$css_file = Dynamic_CSS::create( $post_id, $css_file );
-			$css_file->enqueue();
-		}
+		$css_file->enqueue();
 	}
 
 	/**

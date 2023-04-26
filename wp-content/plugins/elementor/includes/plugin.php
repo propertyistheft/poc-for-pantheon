@@ -581,11 +581,8 @@ class Plugin {
 	 * @since 1.0.0
 	 */
 	public function __clone() {
-		_doing_it_wrong(
-			__FUNCTION__,
-			sprintf( 'Cloning instances of the singleton "%s" class is forbidden.', get_class( $this ) ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			'1.0.0'
-		);
+		// Cloning instances of the class is forbidden.
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Something went wrong.', 'elementor' ), '1.0.0' );
 	}
 
 	/**
@@ -597,11 +594,8 @@ class Plugin {
 	 * @since 1.0.0
 	 */
 	public function __wakeup() {
-		_doing_it_wrong(
-			__FUNCTION__,
-			sprintf( 'Unserializing instances of the singleton "%s" class is forbidden.', get_class( $this ) ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			'1.0.0'
-		);
+		// Unserializing instances of the class is forbidden.
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Something went wrong.', 'elementor' ), '1.0.0' );
 	}
 
 	/**
@@ -855,7 +849,7 @@ class Plugin {
 		}
 
 		if ( property_exists( $this, $property ) ) {
-			throw new \Exception( 'Cannot access private property.' );
+			throw new \Exception( 'Cannot access private property' );
 		}
 
 		return null;

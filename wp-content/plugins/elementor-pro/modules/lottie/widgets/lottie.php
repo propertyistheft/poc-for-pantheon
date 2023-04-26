@@ -403,6 +403,7 @@ class Lottie extends Base_Widget {
 					'trigger!' => 'bind_to_scroll',
 				],
 				'default' => [
+					'unit' => 'px',
 					'size' => 1,
 				],
 				'range' => [
@@ -519,7 +520,6 @@ class Lottie extends Base_Widget {
 			[
 				'label' => esc_html__( 'Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'default' => [
 					'unit' => '%',
 				],
@@ -529,6 +529,7 @@ class Lottie extends Base_Widget {
 				'mobile_default' => [
 					'unit' => '%',
 				],
+				'size_units' => [ '%', 'px', 'vw' ],
 				'range' => [
 					'%' => [
 						'min' => 1,
@@ -554,7 +555,6 @@ class Lottie extends Base_Widget {
 			[
 				'label' => esc_html__( 'Max Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'default' => [
 					'unit' => '%',
 				],
@@ -564,6 +564,7 @@ class Lottie extends Base_Widget {
 				'mobile_default' => [
 					'unit' => '%',
 				],
+				'size_units' => [ '%', 'px', 'vw' ],
 				'range' => [
 					'%' => [
 						'min' => 1,
@@ -755,7 +756,6 @@ class Lottie extends Base_Widget {
 			[
 				'label' => esc_html__( 'Spacing', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
 						'min' => 0,

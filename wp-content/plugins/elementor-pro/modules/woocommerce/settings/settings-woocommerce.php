@@ -453,6 +453,7 @@ class Settings_Woocommerce extends Tab_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => $prefix . '_message_text_shadow',
+				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
 				'selector' => $selectors[ $prefix . '_message_text_shadow' ],
 			]
 		);
@@ -497,6 +498,7 @@ class Settings_Woocommerce extends Tab_Base {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => $prefix . '_notice_box_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => $selectors[ $prefix . '_notice_box_box_shadow' ],
 			]
 		);
@@ -514,7 +516,7 @@ class Settings_Woocommerce extends Tab_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
+				'size_units' => [ 'px', 'em', '%' ],
 				'selectors' => $selectors[ $prefix . '_notice_box_border_radius' ],
 			]
 		);
@@ -541,6 +543,7 @@ class Settings_Woocommerce extends Tab_Base {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => $prefix . '_button_text_shadow',
+				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
 				'selector' => $selectors[ $prefix . '_button_text_shadow' ],
 			]
 		);
@@ -572,6 +575,7 @@ class Settings_Woocommerce extends Tab_Base {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => $prefix . '_buttons_normal_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => $selectors[ $prefix . '_buttons_normal_box_shadow' ],
 			]
 		);
@@ -603,6 +607,7 @@ class Settings_Woocommerce extends Tab_Base {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => $prefix . '_buttons_focus_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => $selectors[ $prefix . '_buttons_focus_box_shadow' ],
 			]
 		);
@@ -661,7 +666,7 @@ class Settings_Woocommerce extends Tab_Base {
 			[
 				'label' => esc_html__( 'Width', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'size_units' => [ 'px', 'em', '%' ],
 				'selectors' => $selectors[ $prefix . '_buttons_border_width' ],
 				'condition' => [
 					$prefix . '_buttons_border_type!' => 'none',
@@ -686,7 +691,7 @@ class Settings_Woocommerce extends Tab_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
+				'size_units' => [ 'px', 'em', '%' ],
 				'selectors' => $selectors[ $prefix . '_buttons_border_radius' ],
 			]
 		);
@@ -696,7 +701,7 @@ class Settings_Woocommerce extends Tab_Base {
 			[
 				'label' => esc_html__( 'Padding', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'size_units' => [ 'px', 'em' ],
 				'selectors' => $selectors[ $prefix . '_buttons_padding' ],
 			]
 		);

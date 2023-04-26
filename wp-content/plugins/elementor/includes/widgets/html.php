@@ -67,7 +67,7 @@ class Widget_Html extends Widget_Base {
 	 * @return array Widget keywords.
 	 */
 	public function get_keywords() {
-		return [ 'html', 'code', 'embed', 'script' ];
+		return [ 'html', 'code' ];
 	}
 
 	/**
@@ -89,10 +89,11 @@ class Widget_Html extends Widget_Base {
 		$this->add_control(
 			'html',
 			[
-				'label' => esc_html__( 'HTML Code', 'elementor' ),
+				'label' => '',
 				'type' => Controls_Manager::CODE,
 				'default' => '',
 				'placeholder' => esc_html__( 'Enter your code', 'elementor' ),
+				'show_label' => false,
 				'dynamic' => [
 					'active' => true,
 				],

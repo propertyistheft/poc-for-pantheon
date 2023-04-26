@@ -1,6 +1,8 @@
 <?php
 namespace ElementorPro\Modules\Woocommerce\Tags;
 
+use ElementorPro\Modules\Woocommerce\Tags\Traits\Tag_Product_Id;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
@@ -19,8 +21,7 @@ class Product_SKU extends Base_Tag {
 	}
 
 	public function render() {
-		$product = $this->get_product( $this->get_settings( 'product_id' ) );
-
+		$product = wc_get_product( $this->get_settings( 'product_id' ) );
 		if ( ! $product ) {
 			return;
 		}

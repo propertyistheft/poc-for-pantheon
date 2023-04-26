@@ -1,4 +1,4 @@
-/*! elementor - v3.12.1 - 02-04-2023 */
+/*! elementor - v3.8.0 - 30-10-2022 */
 :root {
   --color-box-shadow-color: rgba(0, 0, 0, 0.05);
 }
@@ -94,13 +94,27 @@
     text-align: end;
   }
 }
-@keyframes eps-animation-pop {
+@-webkit-keyframes eps-animation-pop {
   from {
-    transform: scale(0.75);
+    -webkit-transform: scale(0.75);
+            transform: scale(0.75);
     opacity: 0;
   }
   to {
-    transform: scale(1);
+    -webkit-transform: scale(1);
+            transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes eps-animation-pop {
+  from {
+    -webkit-transform: scale(0.75);
+            transform: scale(0.75);
+    opacity: 0;
+  }
+  to {
+    -webkit-transform: scale(1);
+            transform: scale(1);
     opacity: 1;
   }
 }

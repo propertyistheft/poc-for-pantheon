@@ -4,9 +4,7 @@ namespace ElementorPro\Modules\Woocommerce\Widgets;
 use Elementor\Controls_Manager;
 use Elementor\Widget_Button;
 use ElementorPro\Base\Base_Widget_Trait;
-use ElementorPro\Core\Utils;
 use ElementorPro\Modules\QueryControl\Module;
-use ElementorPro\Modules\Woocommerce\Traits\Product_Id_Trait;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -15,7 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Add_To_Cart extends Widget_Button {
 
 	use Base_Widget_Trait;
-	use Product_Id_Trait;
 
 	public function get_name() {
 		return 'wc-add-to-cart';
@@ -175,18 +172,17 @@ class Add_To_Cart extends Widget_Button {
 			$product_id = $settings['product_id'];
 		} elseif ( wp_doing_ajax() && ! empty( $settings['product_id'] ) ) {
 			// PHPCS - No nonce is required.
-			// phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$product_id = (int) Utils::_unstable_get_super_global_value( $_POST, 'post_id' );
+			$product_id = $_POST['post_id']; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		} else {
 			$product_id = get_queried_object_id();
 		}
 
 		global $product;
-		$product = $this->get_product( $product_id );
+		$product = wc_get_product( $product_id );
 
 		$settings = $this->get_settings_for_display();
 
-		if ( in_array( $settings['layout'], [ 'auto', 'stacked' ], true ) ) {
+		if ( in_array( $settings['layout'], [ 'auto', 'stacked' ] ) ) {
 			add_action( 'woocommerce_before_add_to_cart_quantity', [ $this, 'before_add_to_cart_quantity' ], 95 );
 			add_action( 'woocommerce_after_add_to_cart_button', [ $this, 'after_add_to_cart_button' ], 5 );
 		}
@@ -197,7 +193,7 @@ class Add_To_Cart extends Widget_Button {
 			$this->render_ajax_button( $product );
 		}
 
-		if ( in_array( $settings['layout'], [ 'auto', 'stacked' ], true ) ) {
+		if ( in_array( $settings['layout'], [ 'auto', 'stacked' ] ) ) {
 			remove_action( 'woocommerce_before_add_to_cart_quantity', [ $this, 'before_add_to_cart_quantity' ], 95 );
 			remove_action( 'woocommerce_after_add_to_cart_button', [ $this, 'after_add_to_cart_button' ], 5 );
 		}

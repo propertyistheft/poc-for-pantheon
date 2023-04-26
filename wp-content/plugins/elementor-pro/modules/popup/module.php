@@ -25,8 +25,6 @@ class Module extends Module_Base {
 
 	const PROMOTION_MENU_SLUG = 'e-popups';
 
-	private $has_popups = null;
-
 	public function __construct() {
 		parent::__construct();
 
@@ -195,13 +193,9 @@ class Module extends Module_Base {
 	}
 
 	private function has_popups() {
-		if ( null !== $this->has_popups ) {
-			return $this->has_popups;
-		}
-
-		$existing_popups = new \WP_Query( [
+		$existing_popups = get_posts( [
 			'post_type' => Source_Local::CPT,
-			'posts_per_page' => 1,
+			'posts_per_page' => 1, // Avoid fetching too much data
 			'post_status' => 'any',
 			'meta_query' => [
 				[
@@ -212,8 +206,6 @@ class Module extends Module_Base {
 			'meta_key' => DocumentBase::TYPE_META_KEY,
 		] );
 
-		$this->has_popups = $existing_popups->post_count > 0;
-
-		return $this->has_popups;
+		return ! empty( $existing_popups );
 	}
 }

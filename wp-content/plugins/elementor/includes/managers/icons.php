@@ -3,7 +3,6 @@ namespace Elementor;
 
 use Elementor\Core\Files\File_Types\Svg;
 use Elementor\Core\Page_Assets\Data_Managers\Font_Icon_Svg\Manager as Font_Icon_Svg_Data_Manager;
-use Elementor\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -24,7 +23,7 @@ class Icons_Manager {
 
 	const LOAD_FA4_SHIM_OPTION_KEY = 'elementor_load_fa4_shim';
 
-	const ELEMENTOR_ICONS_VERSION = '5.18.0';
+	const ELEMENTOR_ICONS_VERSION = '5.16.0';
 
 	/**
 	 * Tabs.
@@ -45,39 +44,6 @@ class Icons_Manager {
 	}
 
 	/**
-	 * @param $icon
-	 * @param $attributes
-	 * @param $tag
-	 * @return bool|mixed|string
-	 */
-	public static function try_get_icon_html( $icon, $attributes = [], $tag = 'i' ) {
-		if ( empty( $icon['library'] ) ) {
-			return '';
-		}
-
-		return static::get_icon_html( $icon, $attributes, $tag );
-	}
-
-	/**
-	 * @param array $icon
-	 * @param array $attributes
-	 * @param $tag
-	 * @return bool|mixed|string
-	 */
-	private static function get_icon_html( array $icon, array $attributes, $tag ) {
-		/**
-		 * When the library value is svg it means that it's a SVG media attachment uploaded by the user.
-		 * Otherwise, it's the name of the font family that the icon belongs to.
-		 */
-		if ( 'svg' === $icon['library'] ) {
-			$output = self::render_uploaded_svg_icon( $icon['value'] );
-		} else {
-			$output = self::render_font_icon( $icon, $attributes, $tag );
-		}
-		return $output;
-	}
-
-	/**
 	 * register styles
 	 *
 	 * Used to register all icon types stylesheets so they could be enqueued later by widgets
@@ -94,7 +60,7 @@ class Icons_Manager {
 			$dependencies = [];
 			if ( ! empty( $icon_type['enqueue'] ) ) {
 				foreach ( (array) $icon_type['enqueue'] as $font_css_url ) {
-					if ( ! in_array( $font_css_url, array_keys( $shared_styles ), true ) ) {
+					if ( ! in_array( $font_css_url, array_keys( $shared_styles ) ) ) {
 						$style_handle = 'elementor-icons-shared-' . count( $shared_styles );
 						wp_register_style(
 							$style_handle,
@@ -203,7 +169,6 @@ class Icons_Manager {
 	}
 
 	public static function enqueue_shim() {
-		//phpcs:ignore WordPress.WP.EnqueuedResourceParameters.NotInFooter
 		wp_enqueue_script(
 			'font-awesome-4-shim',
 			self::get_fa_asset_url( 'v4-shims', 'js' ),
@@ -360,7 +325,17 @@ class Icons_Manager {
 			return false;
 		}
 
-		$output = static::get_icon_html( $icon, $attributes, $tag );
+		$output = '';
+
+		/**
+		 * When the library value is svg it means that it's a SVG media attachment uploaded by the user.
+		 * Otherwise, it's the name of the font family that the icon belongs to.
+		 */
+		if ( 'svg' === $icon['library'] ) {
+			$output = self::render_uploaded_svg_icon( $icon['value'] );
+		} else {
+			$output = self::render_font_icon( $icon, $attributes, $tag );
+		}
 
 		Utils::print_unescaped_internal_string( $output );
 
@@ -522,8 +497,7 @@ class Icons_Manager {
 	 * @return string
 	 */
 	public function get_upgrade_redirect_url() {
-
-		if ( ! wp_verify_nonce( Utils::get_super_global_value( $_GET, '_wpnonce' ), 'tools-page-from-editor' ) ) {
+		if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'tools-page-from-editor' ) ) {
 			return '';
 		}
 
@@ -572,7 +546,7 @@ class Icons_Manager {
 			$load_shim = get_option( self::LOAD_FA4_SHIM_OPTION_KEY, false );
 			if ( 'elementor/editor/after_enqueue_styles' === $current_filter ) {
 				self::enqueue_shim();
-			} elseif ( 'yes' === $load_shim ) {
+			} else if ( 'yes' === $load_shim ) {
 				self::enqueue_shim();
 			}
 		}

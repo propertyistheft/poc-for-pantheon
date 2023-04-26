@@ -89,7 +89,7 @@ class Activate extends Common_App {
 			] );
 		}
 
-		if ( empty( $data['success'] ) ) {
+		if ( License\API::STATUS_VALID !== $data['license'] ) {
 			$error_msg = License\API::get_error_message( $data['error'] ); // get_error_message() escapes html
 
 			wp_die( $error_msg, esc_html__( 'Elementor Pro', 'elementor-pro' ), [ // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

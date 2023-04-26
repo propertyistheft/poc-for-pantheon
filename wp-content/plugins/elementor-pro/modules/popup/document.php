@@ -36,7 +36,6 @@ class Document extends Theme_Section_Document {
 		$properties['location'] = 'popup';
 		$properties['support_kit'] = true;
 		$properties['support_site_editor'] = false;
-		$properties['support_lazyload'] = false;
 
 		return $properties;
 	}
@@ -165,7 +164,6 @@ class Document extends Theme_Section_Document {
 			[
 				'label' => esc_html__( 'Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'range' => [
 					'px' => [
 						'min' => 100,
@@ -176,6 +174,7 @@ class Document extends Theme_Section_Document {
 						'max' => 100,
 					],
 				],
+				'size_units' => [ 'px', 'vw' ],
 				'default' => [
 					'size' => 640,
 				],
@@ -210,7 +209,6 @@ class Document extends Theme_Section_Document {
 			[
 				'label' => esc_html__( 'Custom Height', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em', 'rem', 'vh', 'custom' ],
 				'range' => [
 					'px' => [
 						'min' => 100,
@@ -221,6 +219,7 @@ class Document extends Theme_Section_Document {
 						'max' => 100,
 					],
 				],
+				'size_units' => [ 'px', 'vh' ],
 				'condition' => [
 					'height_type' => 'custom',
 				],
@@ -447,7 +446,7 @@ class Document extends Theme_Section_Document {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
+				'size_units' => [ 'px', '%' ],
 				'selectors' => [
 					'{{WRAPPER}} .dialog-widget-content' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
 				],
@@ -537,7 +536,7 @@ class Document extends Theme_Section_Document {
 			[
 				'label' => esc_html__( 'Vertical Position', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
+				'size_units' => [ '%', 'px' ],
 				'range' => [
 					'%' => [
 						'max' => 100,
@@ -569,7 +568,7 @@ class Document extends Theme_Section_Document {
 			[
 				'label' => esc_html__( 'Horizontal Position', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
+				'size_units' => [ '%', 'px' ],
 				'range' => [
 					'%' => [
 						'max' => 100,
@@ -752,17 +751,6 @@ class Document extends Theme_Section_Document {
 		);
 
 		$this->add_control(
-			'a11y_navigation',
-			[
-				'label' => esc_html__( 'Accessible navigation', 'elementor-pro' ),
-				'type' => Controls_Manager::SWITCHER,
-				'default' => 'yes',
-				'description' => esc_html__( 'Allow keyboard tab navigation for accessibility', 'elementor-pro' ),
-				'frontend_available' => true,
-			]
-		);
-
-		$this->add_control(
 			'open_selector',
 			[
 				'label' => esc_html__( 'Open By Selector', 'elementor-pro' ),
@@ -781,7 +769,7 @@ class Document extends Theme_Section_Document {
 			[
 				'label' => esc_html__( 'Margin', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'size_units' => [ 'px', '%' ],
 				'separator' => 'before',
 				'selectors' => [
 					'{{WRAPPER}} .dialog-widget-content' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
@@ -794,7 +782,7 @@ class Document extends Theme_Section_Document {
 			[
 				'label' => esc_html__( 'Padding', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'size_units' => [ 'px', '%' ],
 				'selectors' => [
 					'{{WRAPPER}} .dialog-message' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],

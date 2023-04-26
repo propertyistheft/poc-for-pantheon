@@ -2,17 +2,16 @@
 namespace ElementorPro\Core\App\Modules\SiteEditor;
 
 use Elementor\Core\Admin\Menu\Admin_Menu_Manager;
-use Elementor\Core\Experiments\Manager as ExperimentsManager;
+use Elementor\Core\Experiments\Manager;
+use Elementor\TemplateLibrary\Source_Local;
 use Elementor\Core\Frontend\Render_Mode_Manager;
+use ElementorPro\Core\App\Modules\SiteEditor\Data\Controller;
 use Elementor\Core\Base\Module as BaseModule;
 use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
-use Elementor\TemplateLibrary\Source_Local;
-use ElementorPro\Core\App\Modules\SiteEditor\Data\Controller;
-use ElementorPro\Core\Behaviors\Feature_Lock;
 use ElementorPro\Modules\ThemeBuilder\AdminMenuItems\Theme_Builder_Menu_Item;
 use ElementorPro\Modules\ThemeBuilder\Module as Theme_Builder_Table_View;
-use ElementorPro\Modules\ThemeBuilder\Module as ThemeBuilderModule;
 use ElementorPro\Plugin;
+use ElementorPro\Modules\ThemeBuilder\Module as ThemeBuilderModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -24,11 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Responsible for initializing Elementor Pro App functionality
  */
 class Module extends BaseModule {
-	/**
-	 * @var Feature_Lock
-	 */
-	private $lock;
-
 	/**
 	 * Get name.
 	 *
@@ -84,40 +78,21 @@ class Module extends BaseModule {
 	}
 
 	protected function get_init_settings() {
-		$settings = [
+		return [
 			'urls' => [
 				'legacy_view' => add_query_arg( 'tabs_group', ThemeBuilderModule::ADMIN_LIBRARY_TAB_GROUP, admin_url( Source_Local::ADMIN_MENU_SLUG ) ),
 			],
-			'utms' => [
-				'utm_source' => 'theme-builder',
-				'utm_medium' => 'wp-dash',
-			],
 		];
-
-		if ( $this->lock->is_locked() ) {
-			$settings['lock'] = $this->lock->get_config();
-		}
-
-		return $settings;
 	}
 
-	private function add_default_new_site_editor_experiments( ExperimentsManager $manager ) {
+	private function add_default_new_site_editor_experiments( Manager $manager ) {
 		$manager->add_feature( [
 			'name' => 'theme_builder_v2',
 			'title' => __( 'Default to New Theme Builder', 'elementor-pro' ),
 			'description' => __( 'Entering the Theme Builder through WP Dashboard > Templates > Theme Builder opens the New theme builder by default. But don’t worry, you can always view the WP styled version of the screen with a simple click of a button.', 'elementor-pro' ),
-			'release_status' => ExperimentsManager::RELEASE_STATUS_STABLE,
-			'default' => ExperimentsManager::STATE_ACTIVE,
+			'release_status' => Manager::RELEASE_STATUS_STABLE,
+			'default' => Manager::STATE_ACTIVE,
 		] );
-	}
-
-	/**
-	 * Get site editor url.
-	 *
-	 * @return string
-	 */
-	private function get_site_editor_url() : string {
-		return Plugin::elementor()->app->get_base_url() . '#/site-editor';
 	}
 
 	private function register_site_editor_menu() {
@@ -136,7 +111,7 @@ class Module extends BaseModule {
 			'',
 			__( 'Theme Builder', 'elementor-pro' ),
 			'publish_posts',
-			$this->get_site_editor_url()
+			Plugin::elementor()->app->get_base_url() . '#/site-editor'
 		);
 	}
 
@@ -148,7 +123,7 @@ class Module extends BaseModule {
 		$admin_menu_manager->unregister( add_query_arg( 'tabs_group', ThemeBuilderModule::ADMIN_LIBRARY_TAB_GROUP, Source_Local::ADMIN_MENU_SLUG ) );
 
 		$admin_menu_manager->register(
-			$this->get_site_editor_url(),
+			Plugin::elementor()->app->get_base_url() . '#/site-editor',
 			new Theme_Builder_Menu_Item()
 		);
 	}
@@ -162,7 +137,7 @@ class Module extends BaseModule {
 		$categories['create']['items']['theme-template'] = [
 			'title' => __( 'Add New Theme Template', 'elementor-pro' ),
 			'icon' => 'plus-circle-o',
-			'url' => $this->get_site_editor_url() . '/add-new',
+			'url' => Plugin::elementor()->app->get_base_url() . '#/site-editor/add-new',
 			'keywords' => [ 'template', 'theme', 'new', 'create' ],
 		];
 
@@ -175,14 +150,12 @@ class Module extends BaseModule {
 	 * @access public
 	 */
 	public function __construct() {
-		$this->lock = new Feature_Lock( [ 'type' => 'theme-builder' ] );
-
 		Plugin::elementor()->data_manager->register_controller( Controller::class );
 
 		add_action( 'elementor/ajax/register_actions', [ $this, 'register_ajax_actions' ], 11 /* Override core actions */ );
 		add_action( 'elementor/frontend/render_mode/register', [ $this, 'register_render_mode' ] );
 
-		add_action( 'elementor/experiments/default-features-registered', function ( ExperimentsManager $manager ) {
+		add_action( 'elementor/experiments/default-features-registered', function ( Manager $manager ) {
 			$this->add_default_new_site_editor_experiments( $manager );
 		} );
 

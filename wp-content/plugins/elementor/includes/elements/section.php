@@ -315,7 +315,7 @@ class Element_Section extends Element_Base {
 						'max' => 100,
 					],
 				],
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vh', 'vw', 'custom' ],
+				'size_units' => [ 'px', '%', 'vh', 'vw' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-column-gap-custom .elementor-column > .elementor-element-populated' => 'padding: {{SIZE}}{{UNIT}};',
 				],
@@ -363,7 +363,7 @@ class Element_Section extends Element_Base {
 						'max' => 100,
 					],
 				],
-				'size_units' => [ 'px', 'em', 'rem', 'vh', 'vw', 'custom' ],
+				'size_units' => [ 'px', 'vh', 'vw' ],
 				'selectors' => [
 					'{{WRAPPER}} > .elementor-container' => 'min-height: {{SIZE}}{{UNIT}};',
 				],
@@ -410,7 +410,7 @@ class Element_Section extends Element_Base {
 				'condition' => [
 					'height_inner' => [ 'min-height' ],
 				],
-				'size_units' => [ 'px', 'em', 'rem', 'vh', 'vw', 'custom' ],
+				'size_units' => [ 'px', 'vh', 'vw' ],
 				'hide_in_top' => true,
 			]
 		);
@@ -573,12 +573,6 @@ class Element_Section extends Element_Base {
 					'background' => [
 						'frontend_available' => true,
 					],
-					'image' => [
-						'background_lazyload' => [
-							'active' => true,
-							'keys' => [ 'background_image', 'url' ],
-						],
-					],
 				],
 			]
 		);
@@ -648,19 +642,10 @@ class Element_Section extends Element_Base {
 			[
 				'name' => 'background_overlay',
 				'selector' => '{{WRAPPER}} > .elementor-background-overlay',
-				'fields_options' => [
-					'image' => [
-						'background_lazyload' => [
-							'active' => true,
-							'keys' => [ 'background_overlay_image', 'url' ],
-							'selector' => '.elementor-background-overlay',
-						],
-					],
-				],
 			]
 		);
 
-		$this->add_responsive_control(
+		$this->add_control(
 			'background_overlay_opacity',
 			[
 				'label' => esc_html__( 'Opacity', 'elementor' ),
@@ -764,7 +749,7 @@ class Element_Section extends Element_Base {
 			]
 		);
 
-		$this->add_responsive_control(
+		$this->add_control(
 			'background_overlay_hover_opacity',
 			[
 				'label' => esc_html__( 'Opacity', 'elementor' ),
@@ -850,7 +835,7 @@ class Element_Section extends Element_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
+				'size_units' => [ 'px', '%', 'em' ],
 				'selectors' => [
 					'{{WRAPPER}}, {{WRAPPER}} > .elementor-background-overlay' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -886,7 +871,7 @@ class Element_Section extends Element_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
+				'size_units' => [ 'px', '%' ],
 				'selectors' => [
 					'{{WRAPPER}}:hover, {{WRAPPER}}:hover > .elementor-background-overlay' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -1174,7 +1159,7 @@ class Element_Section extends Element_Base {
 						'icon' => 'eicon-text-align-right',
 					],
 					'justify' => [
-						'title' => esc_html__( 'Justified', 'elementor' ),
+						'title' => __( 'Justified', 'elementor' ),
 						'icon' => 'eicon-text-align-justify',
 					],
 				],
@@ -1200,7 +1185,7 @@ class Element_Section extends Element_Base {
 			[
 				'label' => esc_html__( 'Margin', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'size_units' => [ 'px', 'em', '%', 'rem' ],
 				'allowed_dimensions' => 'vertical',
 				'placeholder' => [
 					'top' => '',
@@ -1219,7 +1204,7 @@ class Element_Section extends Element_Base {
 			[
 				'label' => esc_html__( 'Padding', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'size_units' => [ 'px', 'em', '%', 'rem' ],
 				'selectors' => [
 					'{{WRAPPER}}' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],

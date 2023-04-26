@@ -24,6 +24,7 @@
 				spacer: 'sticky-spacer',
 			},
 			isRTL: false,
+			relativeTarget: 'parent',
 			handleScrollbarWidth: false,
 		};
 
@@ -150,17 +151,19 @@
 				position: 'absolute',
 			};
 
-			elementOffsetValue = elements.$spacer.position().left;
+			if ( 'document' === settings.relativeTarget || $element.hasClass( 'elementor-widget' ) ) {
+				elementOffsetValue = elements.$spacer.position().left;
 
-			if ( settings.isRTL ) {
-				const parentWidth = $element.parent().outerWidth(),
-					elementOffsetValueLeft = elements.$spacer.position().left;
+				if ( settings.isRTL ) {
+					let parentWidth = $element.parent().outerWidth(),
+						elementOffsetValueLeft = elements.$spacer.position().left;
 
-				elementWidth = elements.$spacer.outerWidth();
-				elementOffsetValue = Math.max( parentWidth - elementWidth - elementOffsetValueLeft, 0 );
+					elementWidth = elements.$spacer.outerWidth();
+					elementOffsetValue = Math.max( parentWidth - elementWidth - elementOffsetValueLeft, 0 );
+				}
+
+				css[ 'inset-inline-start' ] = elementOffsetValue + 'px';
 			}
-
-			css[ 'inset-inline-start' ] = elementOffsetValue + 'px';
 
 			css[ settings.to ] = '';
 

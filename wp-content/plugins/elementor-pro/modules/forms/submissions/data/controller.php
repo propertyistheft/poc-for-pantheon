@@ -95,6 +95,15 @@ class Controller extends Controller_Base {
 				],
 				'additionalProperties' => [
 					'context' => 'filter',
+					'options' => [
+						'type' => 'enum',
+						'labels' => [
+							'all' => esc_html__( 'All', 'elementor-pro' ),
+							'unread' => esc_html__( 'Unread', 'elementor-pro' ),
+							'read' => esc_html__( 'Read', 'elementor-pro' ),
+							'trash' => esc_html__( 'Trash', 'elementor-pro' ),
+						],
+					],
 				],
 				'required' => false,
 			],
@@ -112,6 +121,11 @@ class Controller extends Controller_Base {
 				'required' => false,
 				'additionalProperties' => [
 					'context' => 'filter',
+					'options' => [
+						'type' => 'resource',
+						'command' => 'forms/index',
+						'args' => [ 'context' => 'options' ],
+					],
 				],
 			],
 			'referer' => [
@@ -120,6 +134,11 @@ class Controller extends Controller_Base {
 				'required' => false,
 				'additionalProperties' => [
 					'context' => 'filter',
+					'options' => [
+						'type' => 'resource',
+						'command' => 'form-submissions/referer',
+						'args' => [ 'context' => 'options' ],
+					],
 				],
 			],
 			'after' => [

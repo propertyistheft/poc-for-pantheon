@@ -25,12 +25,10 @@ class Product_Gallery extends Base_Data_Tag {
 	}
 
 	public function get_value( array $options = [] ) {
-		$product = $this->get_product( $this->get_settings( 'product_id' ) );
-
+		$product = wc_get_product();
 		if ( ! $product ) {
 			return [];
 		}
-
 		$value = [];
 
 		$attachment_ids = $product->get_gallery_image_ids();
