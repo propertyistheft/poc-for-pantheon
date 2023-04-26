@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "32c080d790236ba2d78f1bab607c9f33",
+    "content-hash": "f1527381c953ad5af1a016611cfc138f",
     "packages": [
         {
             "name": "composer/installers",
@@ -190,15 +190,15 @@
         },
         {
             "name": "wpackagist-plugin/pantheon-advanced-page-cache",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/pantheon-advanced-page-cache/",
-                "reference": "tags/1.0.0"
+                "reference": "tags/1.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/pantheon-advanced-page-cache.1.0.0.zip"
+                "url": "https://downloads.wordpress.org/plugin/pantheon-advanced-page-cache.1.1.0.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
