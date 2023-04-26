@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "33a3a7c1ba935db067db414c976390c7",
+    "content-hash": "45cfa4035b858a359ecb8c7470cd7664",
     "packages": [
         {
             "name": "composer/installers",
@@ -153,34 +153,34 @@
         },
         {
             "name": "hipdevteam/elementor-pro",
-            "version": "3.8.0",
+            "version": "3.9.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.com:hipdevteam/elementor-pro.git",
-                "reference": "7b0c54a85983671ad56c209376f148f95635a3c0"
+                "reference": "e0a04b5a4cda4fa113d38d716b2663d645d5ca85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/hipdevteam%2Felementor-pro/repository/archive.zip?sha=7b0c54a85983671ad56c209376f148f95635a3c0",
-                "reference": "7b0c54a85983671ad56c209376f148f95635a3c0",
+                "url": "https://gitlab.com/api/v4/projects/hipdevteam%2Felementor-pro/repository/archive.zip?sha=e0a04b5a4cda4fa113d38d716b2663d645d5ca85",
+                "reference": "e0a04b5a4cda4fa113d38d716b2663d645d5ca85",
                 "shasum": ""
             },
             "type": "wordpress-plugin",
             "notification-url": "https://packagist.org/downloads/",
             "description": "Fork of Elementor Pro for use with composer",
-            "time": "2022-11-03T21:00:31+00:00"
+            "time": "2022-12-09T02:09:52+00:00"
         },
         {
             "name": "wpackagist-plugin/elementor",
-            "version": "3.8.0",
+            "version": "3.9.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/elementor/",
-                "reference": "tags/3.8.0"
+                "reference": "tags/3.9.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/elementor.3.8.0.zip"
+                "url": "https://downloads.wordpress.org/plugin/elementor.3.9.0.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
