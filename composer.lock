@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "32c080d790236ba2d78f1bab607c9f33",
+    "content-hash": "a08887a81c2b7a2e34de1bb031b7cc21",
     "packages": [
         {
             "name": "composer/installers",
@@ -169,6 +169,54 @@
             "notification-url": "https://packagist.org/downloads/",
             "description": "Fork of Elementor Pro for use with composer",
             "time": "2023-01-19T16:38:36+00:00"
+        },
+        {
+            "name": "pantheon-quicksilver/debugging-example",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pantheon-quicksilver/debugging-example.git",
+                "reference": "ef7ce421cf7aca8c2e488da8c5463410e824df4a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pantheon-quicksilver/debugging-example/zipball/ef7ce421cf7aca8c2e488da8c5463410e824df4a",
+                "reference": "ef7ce421cf7aca8c2e488da8c5463410e824df4a",
+                "shasum": ""
+            },
+            "type": "quicksilver-script",
+            "extra": {
+                "pantheon-quicksilver": {
+                    "debugging-example": [
+                        {
+                            "wf_type": "clear_cache",
+                            "stage": "after",
+                            "weight": 10
+                        },
+                        {
+                            "wf_type": "sync_code",
+                            "stage": "after",
+                            "weight": 10
+                        },
+                        {
+                            "wf_type": "clone_database",
+                            "stage": "after",
+                            "weight": 10
+                        }
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Quick debugging example for users explore the potential of Quicksilver.",
+            "homepage": "https://github.com/pantheon-quicksilver/debugging-example",
+            "support": {
+                "issues": "https://github.com/pantheon-quicksilver/debugging-example/issues",
+                "source": "https://github.com/pantheon-quicksilver/debugging-example/tree/v1.0.1"
+            },
+            "time": "2021-10-29T09:15:03+00:00"
         },
         {
             "name": "wpackagist-plugin/elementor",
