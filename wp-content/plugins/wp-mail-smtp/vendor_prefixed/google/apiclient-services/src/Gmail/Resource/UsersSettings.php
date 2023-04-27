@@ -27,7 +27,7 @@ use WPMailSMTP\Vendor\Google\Service\Gmail\VacationSettings;
  * Typical usage is:
  *  <code>
  *   $gmailService = new Google\Service\Gmail(...);
- *   $settings = $gmailService->users_settings;
+ *   $settings = $gmailService->settings;
  *  </code>
  */
 class UsersSettings extends \WPMailSMTP\Vendor\Google\Service\Resource

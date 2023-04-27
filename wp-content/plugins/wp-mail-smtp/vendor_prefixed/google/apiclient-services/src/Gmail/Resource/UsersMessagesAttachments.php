@@ -23,7 +23,7 @@ use WPMailSMTP\Vendor\Google\Service\Gmail\MessagePartBody;
  * Typical usage is:
  *  <code>
  *   $gmailService = new Google\Service\Gmail(...);
- *   $attachments = $gmailService->users_messages_attachments;
+ *   $attachments = $gmailService->attachments;
  *  </code>
  */
 class UsersMessagesAttachments extends \WPMailSMTP\Vendor\Google\Service\Resource

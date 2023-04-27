@@ -23,18 +23,18 @@ class Exception extends \WPMailSMTP\Vendor\Google\Exception
     /**
      * Optional list of errors returned in a JSON body of an HTTP error response.
      */
-    protected $errors = [];
+    protected $errors = array();
     /**
      * Override default constructor to add the ability to set $errors and a retry
      * map.
      *
      * @param string $message
      * @param int $code
-     * @param Exception|null $previous
-     * @param array<array<string,string>>|null $errors List of errors returned in an HTTP
-     * response or null.  Defaults to [].
+     * @param \Exception|null $previous
+     * @param [{string, string}] errors List of errors returned in an HTTP
+     * response.  Defaults to [].
      */
-    public function __construct($message, $code = 0, \WPMailSMTP\Vendor\Google\Service\Exception $previous = null, $errors = [])
+    public function __construct($message, $code = 0, \WPMailSMTP\Vendor\Google\Service\Exception $previous = null, $errors = array())
     {
         if (\version_compare(\PHP_VERSION, '5.3.0') >= 0) {
             parent::__construct($message, $code, $previous);
@@ -46,17 +46,15 @@ class Exception extends \WPMailSMTP\Vendor\Google\Exception
     /**
      * An example of the possible errors returned.
      *
-     * [
-     *   {
-     *     "domain": "global",
-     *     "reason": "authError",
-     *     "message": "Invalid Credentials",
-     *     "locationType": "header",
-     *     "location": "Authorization",
-     *   }
-     * ]
+     * {
+     *   "domain": "global",
+     *   "reason": "authError",
+     *   "message": "Invalid Credentials",
+     *   "locationType": "header",
+     *   "location": "Authorization",
+     * }
      *
-     * @return array<array<string,string>>|null List of errors returned in an HTTP response or null.
+     * @return [{string, string}] List of errors return in an HTTP response or [].
      */
     public function getErrors()
     {

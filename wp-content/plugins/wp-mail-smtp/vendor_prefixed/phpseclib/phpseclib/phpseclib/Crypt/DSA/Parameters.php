@@ -16,7 +16,7 @@ use WPMailSMTP\Vendor\phpseclib3\Crypt\DSA;
  *
  * @author  Jim Wigginton <terrafrost@php.net>
  */
-final class Parameters extends \WPMailSMTP\Vendor\phpseclib3\Crypt\DSA
+class Parameters extends \WPMailSMTP\Vendor\phpseclib3\Crypt\DSA
 {
     /**
      * Returns the parameters

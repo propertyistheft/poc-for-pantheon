@@ -34,7 +34,7 @@ use WPMailSMTP\Vendor\Psr\Http\Message\RequestInterface;
 class ProxyAuthTokenMiddleware
 {
     /**
-     * @var callable
+     * @var callback
      */
     private $httpHandler;
     /**
@@ -42,7 +42,7 @@ class ProxyAuthTokenMiddleware
      */
     private $fetcher;
     /**
-     * @var ?callable
+     * @var callable
      */
     private $tokenCallback;
     /**
@@ -100,7 +100,7 @@ class ProxyAuthTokenMiddleware
     /**
      * Call fetcher to fetch the token.
      *
-     * @return string|null
+     * @return string
      */
     private function fetchToken()
     {
@@ -115,16 +115,11 @@ class ProxyAuthTokenMiddleware
         if (\array_key_exists('id_token', $auth_tokens)) {
             return $auth_tokens['id_token'];
         }
-        return null;
     }
-    /**
-     * @return string|null;
-     */
     private function getQuotaProject()
     {
         if ($this->fetcher instanceof \WPMailSMTP\Vendor\Google\Auth\GetQuotaProjectInterface) {
             return $this->fetcher->getQuotaProject();
         }
-        return null;
     }
 }

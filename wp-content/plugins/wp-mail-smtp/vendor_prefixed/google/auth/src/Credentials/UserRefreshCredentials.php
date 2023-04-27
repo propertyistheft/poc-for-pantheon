@@ -41,16 +41,14 @@ class UserRefreshCredentials extends \WPMailSMTP\Vendor\Google\Auth\CredentialsL
     protected $auth;
     /**
      * The quota project associated with the JSON credentials
-     *
-     * @var string
      */
     protected $quotaProject;
     /**
      * Create a new UserRefreshCredentials.
      *
-     * @param string|string[] $scope the scope of the access request, expressed
+     * @param string|array $scope the scope of the access request, expressed
      *   either as an Array or as a space-delimited String.
-     * @param string|array<mixed> $jsonKey JSON credential file path or JSON credentials
+     * @param string|array $jsonKey JSON credential file path or JSON credentials
      *   as an associative array
      */
     public function __construct($scope, $jsonKey)
@@ -59,8 +57,8 @@ class UserRefreshCredentials extends \WPMailSMTP\Vendor\Google\Auth\CredentialsL
             if (!\file_exists($jsonKey)) {
                 throw new \InvalidArgumentException('file does not exist');
             }
-            $json = \file_get_contents($jsonKey);
-            if (!($jsonKey = \json_decode((string) $json, \true))) {
+            $jsonKeyStream = \file_get_contents($jsonKey);
+            if (!($jsonKey = \json_decode($jsonKeyStream, \true))) {
                 throw new \LogicException('invalid json for auth config');
             }
         }
@@ -81,15 +79,13 @@ class UserRefreshCredentials extends \WPMailSMTP\Vendor\Google\Auth\CredentialsL
     /**
      * @param callable $httpHandler
      *
-     * @return array<mixed> {
-     *     A set of auth related metadata, containing the following
-     *
-     *     @type string $access_token
-     *     @type int $expires_in
-     *     @type string $scope
-     *     @type string $token_type
-     *     @type string $id_token
-     * }
+     * @return array A set of auth related metadata, containing the following
+     * keys:
+     *   - access_token (string)
+     *   - expires_in (int)
+     *   - scope (string)
+     *   - token_type (string)
+     *   - id_token (string)
      */
     public function fetchAuthToken(callable $httpHandler = null)
     {
@@ -103,7 +99,7 @@ class UserRefreshCredentials extends \WPMailSMTP\Vendor\Google\Auth\CredentialsL
         return $this->auth->getClientId() . ':' . $this->auth->getCacheKey();
     }
     /**
-     * @return array<mixed>
+     * @return array
      */
     public function getLastReceivedToken()
     {
@@ -117,14 +113,5 @@ class UserRefreshCredentials extends \WPMailSMTP\Vendor\Google\Auth\CredentialsL
     public function getQuotaProject()
     {
         return $this->quotaProject;
-    }
-    /**
-     * Get the granted scopes (if they exist) for the last fetched token.
-     *
-     * @return string|null
-     */
-    public function getGrantedScope()
-    {
-        return $this->auth->getGrantedScope();
     }
 }

@@ -24,7 +24,7 @@ use WPMailSMTP\Vendor\Google\Service\Gmail\ListForwardingAddressesResponse;
  * Typical usage is:
  *  <code>
  *   $gmailService = new Google\Service\Gmail(...);
- *   $forwardingAddresses = $gmailService->users_settings_forwardingAddresses;
+ *   $forwardingAddresses = $gmailService->forwardingAddresses;
  *  </code>
  */
 class UsersSettingsForwardingAddresses extends \WPMailSMTP\Vendor\Google\Service\Resource

@@ -6,72 +6,17 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit3c7a19be7b454357caa24415d9ac82de
 {
-    public static $files = array (
-        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
-        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
-        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
-        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
-    );
-
     public static $prefixLengthsPsr4 = array (
-        'T' => 
-        array (
-            'TheIconic\\Tracking\\GoogleAnalytics\\' => 35,
-        ),
-        'P' => 
-        array (
-            'Psr\\Http\\Message\\' => 17,
-            'Psr\\Http\\Client\\' => 16,
-        ),
-        'G' => 
-        array (
-            'GuzzleHttp\\Psr7\\' => 16,
-            'GuzzleHttp\\Promise\\' => 19,
-            'GuzzleHttp\\' => 11,
-        ),
         'C' => 
         array (
             'Composer\\Installers\\' => 20,
         ),
-        'B' => 
-        array (
-            'Br33f\\Ga4\\MeasurementProtocol\\' => 30,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'TheIconic\\Tracking\\GoogleAnalytics\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/theiconic/php-ga-measurement-protocol/src',
-        ),
-        'Psr\\Http\\Message\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
-        ),
-        'Psr\\Http\\Client\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/http-client/src',
-        ),
-        'GuzzleHttp\\Psr7\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
-        ),
-        'GuzzleHttp\\Promise\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
-        ),
-        'GuzzleHttp\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
-        ),
         'Composer\\Installers\\' => 
         array (
             0 => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers',
-        ),
-        'Br33f\\Ga4\\MeasurementProtocol\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/br33f/php-ga4-mp/src',
         ),
     );
 

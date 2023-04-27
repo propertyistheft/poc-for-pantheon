@@ -24,7 +24,7 @@ use WPMailSMTP\Vendor\Google\Service\Gmail\ListFiltersResponse;
  * Typical usage is:
  *  <code>
  *   $gmailService = new Google\Service\Gmail(...);
- *   $filters = $gmailService->users_settings_filters;
+ *   $filters = $gmailService->filters;
  *  </code>
  */
 class UsersSettingsFilters extends \WPMailSMTP\Vendor\Google\Service\Resource

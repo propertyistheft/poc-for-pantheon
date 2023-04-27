@@ -30,12 +30,16 @@ class FetchAuthTokenCache implements \WPMailSMTP\Vendor\Google\Auth\FetchAuthTok
      */
     private $fetcher;
     /**
-     * @var int
+     * @var array
      */
-    private $eagerRefreshThresholdSeconds = 10;
+    private $cacheConfig;
+    /**
+     * @var CacheItemPoolInterface
+     */
+    private $cache;
     /**
      * @param FetchAuthTokenInterface $fetcher A credentials fetcher
-     * @param array<mixed> $cacheConfig Configuration for the cache
+     * @param array $cacheConfig Configuration for the cache
      * @param CacheItemPoolInterface $cache
      */
     public function __construct(\WPMailSMTP\Vendor\Google\Auth\FetchAuthTokenInterface $fetcher, array $cacheConfig = null, \WPMailSMTP\Vendor\Psr\Cache\CacheItemPoolInterface $cache)
@@ -45,20 +49,13 @@ class FetchAuthTokenCache implements \WPMailSMTP\Vendor\Google\Auth\FetchAuthTok
         $this->cacheConfig = \array_merge(['lifetime' => 1500, 'prefix' => ''], (array) $cacheConfig);
     }
     /**
-     * @return FetchAuthTokenInterface
-     */
-    public function getFetcher()
-    {
-        return $this->fetcher;
-    }
-    /**
      * Implements FetchAuthTokenInterface#fetchAuthToken.
      *
      * Checks the cache for a valid auth token and fetches the auth tokens
      * from the supplied fetcher.
      *
      * @param callable $httpHandler callback which delivers psr7 request
-     * @return array<mixed> the response
+     * @return array the response
      * @throws \Exception
      */
     public function fetchAuthToken(callable $httpHandler = null)
@@ -78,7 +75,7 @@ class FetchAuthTokenCache implements \WPMailSMTP\Vendor\Google\Auth\FetchAuthTok
         return $this->getFullCacheKey($this->fetcher->getCacheKey());
     }
     /**
-     * @return array<mixed>|null
+     * @return array|null
      */
     public function getLastReceivedToken()
     {
@@ -133,7 +130,6 @@ class FetchAuthTokenCache implements \WPMailSMTP\Vendor\Google\Auth\FetchAuthTok
         if ($this->fetcher instanceof \WPMailSMTP\Vendor\Google\Auth\GetQuotaProjectInterface) {
             return $this->fetcher->getQuotaProject();
         }
-        return null;
     }
     /*
      * Get the Project ID from the fetcher.
@@ -153,10 +149,10 @@ class FetchAuthTokenCache implements \WPMailSMTP\Vendor\Google\Auth\FetchAuthTok
     /**
      * Updates metadata with the authorization token.
      *
-     * @param array<mixed> $metadata metadata hashmap
+     * @param array $metadata metadata hashmap
      * @param string $authUri optional auth uri
      * @param callable $httpHandler callback which delivers psr7 request
-     * @return array<mixed> updated metadata hashmap
+     * @return array updated metadata hashmap
      * @throws \RuntimeException If the fetcher does not implement
      *     `Google\Auth\UpdateMetadataInterface`.
      */
@@ -180,10 +176,6 @@ class FetchAuthTokenCache implements \WPMailSMTP\Vendor\Google\Auth\FetchAuthTok
         }
         return $newMetadata;
     }
-    /**
-     * @param string|null $authUri
-     * @return array<mixed>|null
-     */
     private function fetchAuthTokenFromCache($authUri = null)
     {
         // Use the cached value if its available.
@@ -201,18 +193,13 @@ class FetchAuthTokenCache implements \WPMailSMTP\Vendor\Google\Auth\FetchAuthTok
                 // (for JwtAccess and ID tokens)
                 return $cached;
             }
-            if (\time() + $this->eagerRefreshThresholdSeconds < $cached['expires_at']) {
+            if (\time() < $cached['expires_at']) {
                 // access token is not expired
                 return $cached;
             }
         }
         return null;
     }
-    /**
-     * @param array<mixed> $authToken
-     * @param string|null  $authUri
-     * @return void
-     */
     private function saveAuthTokenInCache($authToken, $authUri = null)
     {
         if (isset($authToken['access_token']) || isset($authToken['id_token'])) {

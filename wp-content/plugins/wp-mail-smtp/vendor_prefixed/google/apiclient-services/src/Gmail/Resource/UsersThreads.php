@@ -25,7 +25,7 @@ use WPMailSMTP\Vendor\Google\Service\Gmail\Thread;
  * Typical usage is:
  *  <code>
  *   $gmailService = new Google\Service\Gmail(...);
- *   $threads = $gmailService->users_threads;
+ *   $threads = $gmailService->threads;
  *  </code>
  */
 class UsersThreads extends \WPMailSMTP\Vendor\Google\Service\Resource

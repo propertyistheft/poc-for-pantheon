@@ -26,14 +26,16 @@ use WPMailSMTP\Vendor\Google\Auth\FetchAuthTokenInterface;
 class InsecureCredentials implements \WPMailSMTP\Vendor\Google\Auth\FetchAuthTokenInterface
 {
     /**
-     * @var array{access_token:string}
+     * @var array
      */
     private $token = ['access_token' => ''];
     /**
      * Fetches the auth token. In this case it returns an empty string.
      *
      * @param callable $httpHandler
-     * @return array{access_token:string} A set of auth related metadata
+     * @return array A set of auth related metadata, containing the following
+     * keys:
+     *   - access_token (string)
      */
     public function fetchAuthToken(callable $httpHandler = null)
     {
@@ -53,7 +55,7 @@ class InsecureCredentials implements \WPMailSMTP\Vendor\Google\Auth\FetchAuthTok
      * Fetches the last received token. In this case, it returns the same empty string
      * auth token.
      *
-     * @return array{access_token:string}
+     * @return array
      */
     public function getLastReceivedToken()
     {

@@ -1,6 +1,5 @@
 <?php
 
-declare (strict_types=1);
 namespace WPMailSMTP\Vendor\Psr\Http\Message;
 
 /**
@@ -62,7 +61,7 @@ interface UploadedFileInterface
      * @throws \RuntimeException on any error during the move operation, or on
      *     the second or subsequent call to the method.
      */
-    public function moveTo(string $targetPath);
+    public function moveTo($targetPath);
     /**
      * Retrieve the file size.
      *
