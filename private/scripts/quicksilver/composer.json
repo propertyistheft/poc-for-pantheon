@@ -1,0 +1,29 @@
+{
+  "name": "pantheon-quicksilver/debugging-example",
+  "description": "Quick debugging example for users explore the potential of Quicksilver.",
+  "homepage": "https://github.com/pantheon-quicksilver/debugging-example",
+  "authors": [],
+  "type": "quicksilver-script",
+  "license": "MIT",
+  "extra": {
+    "pantheon-quicksilver": {
+      "debugging-example": [
+        {
+          "wf_type": "clear_cache",
+          "stage": "after",
+          "weight": 10
+        },
+        {
+          "wf_type": "sync_code",
+          "stage": "after",
+          "weight": 10
+        },
+        {
+          "wf_type": "clone_database",
+          "stage": "after",
+          "weight": 10
+        }
+      ]
+    }
+  }
+}

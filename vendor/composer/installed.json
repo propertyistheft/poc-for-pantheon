@@ -171,6 +171,57 @@
             "install-path": "../../wp-content/plugins/elementor-pro"
         },
         {
+            "name": "pantheon-quicksilver/debugging-example",
+            "version": "v1.0.1",
+            "version_normalized": "1.0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pantheon-quicksilver/debugging-example.git",
+                "reference": "ef7ce421cf7aca8c2e488da8c5463410e824df4a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pantheon-quicksilver/debugging-example/zipball/ef7ce421cf7aca8c2e488da8c5463410e824df4a",
+                "reference": "ef7ce421cf7aca8c2e488da8c5463410e824df4a",
+                "shasum": ""
+            },
+            "time": "2021-10-29T09:15:03+00:00",
+            "type": "quicksilver-script",
+            "extra": {
+                "pantheon-quicksilver": {
+                    "debugging-example": [
+                        {
+                            "wf_type": "clear_cache",
+                            "stage": "after",
+                            "weight": 10
+                        },
+                        {
+                            "wf_type": "sync_code",
+                            "stage": "after",
+                            "weight": 10
+                        },
+                        {
+                            "wf_type": "clone_database",
+                            "stage": "after",
+                            "weight": 10
+                        }
+                    ]
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Quick debugging example for users explore the potential of Quicksilver.",
+            "homepage": "https://github.com/pantheon-quicksilver/debugging-example",
+            "support": {
+                "issues": "https://github.com/pantheon-quicksilver/debugging-example/issues",
+                "source": "https://github.com/pantheon-quicksilver/debugging-example/tree/v1.0.1"
+            },
+            "install-path": "../../private/scripts/quicksilver"
+        },
+        {
             "name": "wpackagist-plugin/elementor",
             "version": "3.10.2",
             "version_normalized": "3.10.2.0",
@@ -235,16 +286,16 @@
         },
         {
             "name": "wpackagist-plugin/wp-mail-smtp",
-            "version": "3.7.0",
-            "version_normalized": "3.7.0.0",
+            "version": "3.8.0",
+            "version_normalized": "3.8.0.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/wp-mail-smtp/",
-                "reference": "tags/3.7.0"
+                "reference": "tags/3.8.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/wp-mail-smtp.3.7.0.zip"
+                "url": "https://downloads.wordpress.org/plugin/wp-mail-smtp.3.8.0.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
