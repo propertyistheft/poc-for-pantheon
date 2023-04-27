@@ -1,0 +1,26 @@
+{
+	"name": "hipdevteam/wpforms-form-abandonment",
+	"type": "wordpress-plugin",
+	"description": "Form Abandonment for WPForms",
+	"keywords": [ "wpforms", "analytics", "wordpress" ],
+	"license": "GPL-2.0+",
+	"authors": [
+		{
+			"name": "Hip Creative",
+			"email": "hello@hipcreativeinc.com"
+		}
+	],
+	"require": {
+		"composer/installers": ">=1.0",
+		"theiconic/php-ga-measurement-protocol": "^2.6",
+		"br33f/php-ga4-mp": "^0.1.0"
+	},
+	"require-dev": {
+		"squizlabs/php_codesniffer": "^3.2"
+	},
+	"config": {
+		"allow-plugins": {
+			"composer/installers": true
+		}
+	}
+}
