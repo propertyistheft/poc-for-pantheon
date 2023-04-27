@@ -1,6 +1,5 @@
 <?php
 
-declare (strict_types=1);
 namespace WPMailSMTP\Vendor\Psr\Http\Message;
 
 /**
@@ -55,10 +54,10 @@ interface RequestInterface extends \WPMailSMTP\Vendor\Psr\Http\Message\MessageIn
      *
      * @link http://tools.ietf.org/html/rfc7230#section-5.3 (for the various
      *     request-target forms allowed in request messages)
-     * @param string $requestTarget
+     * @param mixed $requestTarget
      * @return static
      */
-    public function withRequestTarget(string $requestTarget);
+    public function withRequestTarget($requestTarget);
     /**
      * Retrieves the HTTP method of the request.
      *
@@ -80,7 +79,7 @@ interface RequestInterface extends \WPMailSMTP\Vendor\Psr\Http\Message\MessageIn
      * @return static
      * @throws \InvalidArgumentException for invalid HTTP methods.
      */
-    public function withMethod(string $method);
+    public function withMethod($method);
     /**
      * Retrieves the URI instance.
      *
@@ -121,5 +120,5 @@ interface RequestInterface extends \WPMailSMTP\Vendor\Psr\Http\Message\MessageIn
      * @param bool $preserveHost Preserve the original state of the Host header.
      * @return static
      */
-    public function withUri(\WPMailSMTP\Vendor\Psr\Http\Message\UriInterface $uri, bool $preserveHost = \false);
+    public function withUri(\WPMailSMTP\Vendor\Psr\Http\Message\UriInterface $uri, $preserveHost = \false);
 }

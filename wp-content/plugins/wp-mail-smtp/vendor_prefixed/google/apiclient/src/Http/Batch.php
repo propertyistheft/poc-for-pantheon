@@ -18,6 +18,7 @@
 namespace WPMailSMTP\Vendor\Google\Http;
 
 use WPMailSMTP\Vendor\Google\Client;
+use WPMailSMTP\Vendor\Google\Http\REST;
 use WPMailSMTP\Vendor\Google\Service\Exception as GoogleServiceException;
 use WPMailSMTP\Vendor\GuzzleHttp\Psr7;
 use WPMailSMTP\Vendor\GuzzleHttp\Psr7\Request;
@@ -34,11 +35,11 @@ use WPMailSMTP\Vendor\Psr\Http\Message\ResponseInterface;
 class Batch
 {
     const BATCH_PATH = 'batch';
-    private static $CONNECTION_ESTABLISHED_HEADERS = ["HTTP/1.0 200 Connection established\r\n\r\n", "HTTP/1.1 200 Connection established\r\n\r\n"];
+    private static $CONNECTION_ESTABLISHED_HEADERS = array("HTTP/1.0 200 Connection established\r\n\r\n", "HTTP/1.1 200 Connection established\r\n\r\n");
     /** @var string Multipart Boundary. */
     private $boundary;
     /** @var array service requests to be executed. */
-    private $requests = [];
+    private $requests = array();
     /** @var Client */
     private $client;
     private $rootUrl;
@@ -60,7 +61,7 @@ class Batch
     public function execute()
     {
         $body = '';
-        $classes = [];
+        $classes = array();
         $batchHttpTemplate = <<<EOF
 --%s
 Content-Type: application/http
@@ -73,7 +74,7 @@ Content-ID: %s
 
 
 EOF;
-        /** @var RequestInterface $request */
+        /** @var RequestInterface $req */
         foreach ($this->requests as $key => $request) {
             $firstLine = \sprintf('%s %s HTTP/%s', $request->getMethod(), $request->getRequestTarget(), $request->getProtocolVersion());
             $content = (string) $request->getBody();
@@ -87,12 +88,12 @@ EOF;
         $body .= "--{$this->boundary}--";
         $body = \trim($body);
         $url = $this->rootUrl . '/' . $this->batchPath;
-        $headers = ['Content-Type' => \sprintf('multipart/mixed; boundary=%s', $this->boundary), 'Content-Length' => (string) \strlen($body)];
+        $headers = array('Content-Type' => \sprintf('multipart/mixed; boundary=%s', $this->boundary), 'Content-Length' => \strlen($body));
         $request = new \WPMailSMTP\Vendor\GuzzleHttp\Psr7\Request('POST', $url, $headers, $body);
         $response = $this->client->execute($request);
         return $this->parseResponse($response, $classes);
     }
-    public function parseResponse(\WPMailSMTP\Vendor\Psr\Http\Message\ResponseInterface $response, $classes = [])
+    public function parseResponse(\WPMailSMTP\Vendor\Psr\Http\Message\ResponseInterface $response, $classes = array())
     {
         $contentType = $response->getHeaderLine('content-type');
         $contentType = \explode(';', $contentType);
@@ -107,7 +108,7 @@ EOF;
         if (!empty($body)) {
             $body = \str_replace("--{$boundary}--", "--{$boundary}", $body);
             $parts = \explode("--{$boundary}", $body);
-            $responses = [];
+            $responses = array();
             $requests = \array_values($this->requests);
             foreach ($parts as $i => $part) {
                 $part = \trim($part);
@@ -117,8 +118,8 @@ EOF;
                     $status = \substr($part, 0, \strpos($part, "\n"));
                     $status = \explode(" ", $status);
                     $status = $status[1];
-                    list($partHeaders, $partBody) = $this->parseHttpResponse($part, 0);
-                    $response = new \WPMailSMTP\Vendor\GuzzleHttp\Psr7\Response((int) $status, $partHeaders, \WPMailSMTP\Vendor\GuzzleHttp\Psr7\Utils::streamFor($partBody));
+                    list($partHeaders, $partBody) = $this->parseHttpResponse($part, \false);
+                    $response = new \WPMailSMTP\Vendor\GuzzleHttp\Psr7\Response($status, $partHeaders, \WPMailSMTP\Vendor\GuzzleHttp\Psr7\Utils::streamFor($partBody));
                     // Need content id.
                     $key = $headers['content-id'];
                     try {
@@ -137,14 +138,14 @@ EOF;
     }
     private function parseRawHeaders($rawHeaders)
     {
-        $headers = [];
+        $headers = array();
         $responseHeaderLines = \explode("\r\n", $rawHeaders);
         foreach ($responseHeaderLines as $headerLine) {
             if ($headerLine && \strpos($headerLine, ':') !== \false) {
                 list($header, $value) = \explode(': ', $headerLine, 2);
                 $header = \strtolower($header);
                 if (isset($headers[$header])) {
-                    $headers[$header] = \array_merge((array) $headers[$header], (array) $value);
+                    $headers[$header] .= "\n" . $value;
                 } else {
                     $headers[$header] = $value;
                 }
@@ -155,8 +156,8 @@ EOF;
     /**
      * Used by the IO lib and also the batch processing.
      *
-     * @param string $respData
-     * @param int $headerSize
+     * @param $respData
+     * @param $headerSize
      * @return array
      */
     private function parseHttpResponse($respData, $headerSize)
@@ -185,6 +186,6 @@ EOF;
             $responseBody = isset($responseSegments[1]) ? $responseSegments[1] : null;
         }
         $responseHeaders = $this->parseRawHeaders($responseHeaders);
-        return [$responseHeaders, $responseBody];
+        return array($responseHeaders, $responseBody);
     }
 }

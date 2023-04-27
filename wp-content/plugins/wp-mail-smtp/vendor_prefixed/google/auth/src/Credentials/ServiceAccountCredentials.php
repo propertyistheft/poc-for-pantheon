@@ -72,28 +72,28 @@ class ServiceAccountCredentials extends \WPMailSMTP\Vendor\Google\Auth\Credentia
      * @var string
      */
     protected $quotaProject;
-    /**
+    /*
      * @var string|null
      */
     protected $projectId;
-    /**
-     * @var array<mixed>|null
+    /*
+     * @var array|null
      */
     private $lastReceivedJwtAccessToken;
-    /**
+    /*
      * @var bool
      */
     private $useJwtAccessWithScope = \false;
-    /**
+    /*
      * @var ServiceAccountJwtAccessCredentials|null
      */
     private $jwtAccessCredentials;
     /**
      * Create a new ServiceAccountCredentials.
      *
-     * @param string|string[]|null $scope the scope of the access request, expressed
+     * @param string|array $scope the scope of the access request, expressed
      *   either as an Array or as a space-delimited String.
-     * @param string|array<mixed> $jsonKey JSON credential file path or JSON credentials
+     * @param string|array $jsonKey JSON credential file path or JSON credentials
      *   as an associative array
      * @param string $sub an email address account to impersonate, in situations when
      *   the service account has been delegated domain wide access.
@@ -106,7 +106,7 @@ class ServiceAccountCredentials extends \WPMailSMTP\Vendor\Google\Auth\Credentia
                 throw new \InvalidArgumentException('file does not exist');
             }
             $jsonKeyStream = \file_get_contents($jsonKey);
-            if (!($jsonKey = \json_decode((string) $jsonKeyStream, \true))) {
+            if (!($jsonKey = \json_decode($jsonKeyStream, \true))) {
                 throw new \LogicException('invalid json for auth config');
             }
         }
@@ -135,8 +135,6 @@ class ServiceAccountCredentials extends \WPMailSMTP\Vendor\Google\Auth\Credentia
      * even when only scopes are supplied. Otherwise,
      * ServiceAccountJwtAccessCredentials is only called when no scopes and an
      * authUrl (audience) is suppled.
-     *
-     * @return void
      */
     public function useJwtAccessWithScope()
     {
@@ -145,13 +143,11 @@ class ServiceAccountCredentials extends \WPMailSMTP\Vendor\Google\Auth\Credentia
     /**
      * @param callable $httpHandler
      *
-     * @return array<mixed> {
-     *     A set of auth related metadata, containing the following
-     *
-     *     @type string $access_token
-     *     @type int $expires_in
-     *     @type string $token_type
-     * }
+     * @return array A set of auth related metadata, containing the following
+     * keys:
+     *   - access_token (string)
+     *   - expires_in (int)
+     *   - token_type (string)
      */
     public function fetchAuthToken(callable $httpHandler = null)
     {
@@ -178,7 +174,7 @@ class ServiceAccountCredentials extends \WPMailSMTP\Vendor\Google\Auth\Credentia
         return $key;
     }
     /**
-     * @return array<mixed>
+     * @return array
      */
     public function getLastReceivedToken()
     {
@@ -201,10 +197,10 @@ class ServiceAccountCredentials extends \WPMailSMTP\Vendor\Google\Auth\Credentia
     /**
      * Updates metadata with the authorization token.
      *
-     * @param array<mixed> $metadata metadata hashmap
+     * @param array $metadata metadata hashmap
      * @param string $authUri optional auth uri
      * @param callable $httpHandler callback which delivers psr7 request
-     * @return array<mixed> updated metadata hashmap
+     * @return array updated metadata hashmap
      */
     public function updateMetadata($metadata, $authUri = null, callable $httpHandler = null)
     {
@@ -225,14 +221,11 @@ class ServiceAccountCredentials extends \WPMailSMTP\Vendor\Google\Auth\Credentia
         }
         return $updatedMetadata;
     }
-    /**
-     * @return ServiceAccountJwtAccessCredentials
-     */
     private function createJwtAccessCredentials()
     {
         if (!$this->jwtAccessCredentials) {
             // Create credentials for self-signing a JWT (JwtAccess)
-            $credJson = ['private_key' => $this->auth->getSigningKey(), 'client_email' => $this->auth->getIssuer()];
+            $credJson = array('private_key' => $this->auth->getSigningKey(), 'client_email' => $this->auth->getIssuer());
             $this->jwtAccessCredentials = new \WPMailSMTP\Vendor\Google\Auth\Credentials\ServiceAccountJwtAccessCredentials($credJson, $this->auth->getScope());
         }
         return $this->jwtAccessCredentials;
@@ -240,7 +233,6 @@ class ServiceAccountCredentials extends \WPMailSMTP\Vendor\Google\Auth\Credentia
     /**
      * @param string $sub an email address account to impersonate, in situations when
      *   the service account has been delegated domain wide access.
-     * @return void
      */
     public function setSub($sub)
     {
@@ -267,9 +259,6 @@ class ServiceAccountCredentials extends \WPMailSMTP\Vendor\Google\Auth\Credentia
     {
         return $this->quotaProject;
     }
-    /**
-     * @return bool
-     */
     private function useSelfSignedJwt()
     {
         // If claims are set, this call is for "id_tokens"

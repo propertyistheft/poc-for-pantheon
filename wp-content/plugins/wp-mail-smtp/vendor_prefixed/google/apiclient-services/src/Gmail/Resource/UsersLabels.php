@@ -24,7 +24,7 @@ use WPMailSMTP\Vendor\Google\Service\Gmail\ListLabelsResponse;
  * Typical usage is:
  *  <code>
  *   $gmailService = new Google\Service\Gmail(...);
- *   $labels = $gmailService->users_labels;
+ *   $labels = $gmailService->labels;
  *  </code>
  */
 class UsersLabels extends \WPMailSMTP\Vendor\Google\Service\Resource

@@ -25,7 +25,6 @@ class Service
     public $rootUrl;
     public $version;
     public $servicePath;
-    public $serviceName;
     public $availableScopes;
     public $resource;
     private $client;

@@ -10,7 +10,6 @@ namespace WPMailSMTP\Vendor\Google;
 class Collection extends \WPMailSMTP\Vendor\Google\Model implements \Iterator, \Countable
 {
     protected $collection_key = 'items';
-    /** @return void */
     #[\ReturnTypeWillChange]
     public function rewind()
     {
@@ -18,7 +17,6 @@ class Collection extends \WPMailSMTP\Vendor\Google\Model implements \Iterator, \
             \reset($this->{$this->collection_key});
         }
     }
-    /** @return mixed */
     #[\ReturnTypeWillChange]
     public function current()
     {
@@ -27,7 +25,6 @@ class Collection extends \WPMailSMTP\Vendor\Google\Model implements \Iterator, \
             return \current($this->{$this->collection_key});
         }
     }
-    /** @return mixed */
     #[\ReturnTypeWillChange]
     public function key()
     {
@@ -35,20 +32,17 @@ class Collection extends \WPMailSMTP\Vendor\Google\Model implements \Iterator, \
             return \key($this->{$this->collection_key});
         }
     }
-    /** @return mixed */
     #[\ReturnTypeWillChange]
     public function next()
     {
         return \next($this->{$this->collection_key});
     }
-    /** @return bool */
     #[\ReturnTypeWillChange]
     public function valid()
     {
         $key = $this->key();
         return $key !== null && $key !== \false;
     }
-    /** @return int */
     #[\ReturnTypeWillChange]
     public function count()
     {
@@ -57,8 +51,6 @@ class Collection extends \WPMailSMTP\Vendor\Google\Model implements \Iterator, \
         }
         return \count($this->{$this->collection_key});
     }
-    /** @return bool */
-    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         if (!\is_numeric($offset)) {
@@ -66,7 +58,6 @@ class Collection extends \WPMailSMTP\Vendor\Google\Model implements \Iterator, \
         }
         return isset($this->{$this->collection_key}[$offset]);
     }
-    /** @return mixed */
     public function offsetGet($offset)
     {
         if (!\is_numeric($offset)) {
@@ -75,8 +66,6 @@ class Collection extends \WPMailSMTP\Vendor\Google\Model implements \Iterator, \
         $this->coerceType($offset);
         return $this->{$this->collection_key}[$offset];
     }
-    /** @return void */
-    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         if (!\is_numeric($offset)) {
@@ -84,8 +73,6 @@ class Collection extends \WPMailSMTP\Vendor\Google\Model implements \Iterator, \
         }
         $this->{$this->collection_key}[$offset] = $value;
     }
-    /** @return void */
-    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         if (!\is_numeric($offset)) {

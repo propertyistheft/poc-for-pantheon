@@ -25,9 +25,6 @@ use WPMailSMTP\Vendor\GuzzleHttp\Promise\RejectedPromise;
 use WPMailSMTP\Vendor\GuzzleHttp\Psr7\Response;
 use WPMailSMTP\Vendor\Psr\Http\Message\RequestInterface;
 use WPMailSMTP\Vendor\Psr\Http\Message\ResponseInterface;
-/**
- * @deprecated
- */
 class Guzzle5HttpHandler
 {
     /**

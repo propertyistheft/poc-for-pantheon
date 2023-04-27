@@ -4,41 +4,30 @@ namespace WPMailSMTP\Vendor\GuzzleHttp\Handler;
 
 use WPMailSMTP\Vendor\GuzzleHttp\Exception\ConnectException;
 use WPMailSMTP\Vendor\GuzzleHttp\Exception\RequestException;
-use WPMailSMTP\Vendor\GuzzleHttp\Promise as P;
 use WPMailSMTP\Vendor\GuzzleHttp\Promise\FulfilledPromise;
-use WPMailSMTP\Vendor\GuzzleHttp\Promise\PromiseInterface;
+use WPMailSMTP\Vendor\GuzzleHttp\Psr7;
 use WPMailSMTP\Vendor\GuzzleHttp\Psr7\LazyOpenStream;
 use WPMailSMTP\Vendor\GuzzleHttp\TransferStats;
-use WPMailSMTP\Vendor\GuzzleHttp\Utils;
 use WPMailSMTP\Vendor\Psr\Http\Message\RequestInterface;
 /**
  * Creates curl resources from a request
- *
- * @final
  */
 class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryInterface
 {
-    public const CURL_VERSION_STR = 'curl_version';
-    /**
-     * @deprecated
-     */
-    public const LOW_CURL_VERSION_NUMBER = '7.21.2';
-    /**
-     * @var resource[]|\CurlHandle[]
-     */
+    const CURL_VERSION_STR = 'curl_version';
+    const LOW_CURL_VERSION_NUMBER = '7.21.2';
+    /** @var array */
     private $handles = [];
-    /**
-     * @var int Total number of idle handles to keep in cache
-     */
+    /** @var int Total number of idle handles to keep in cache */
     private $maxHandles;
     /**
      * @param int $maxHandles Maximum number of idle handles.
      */
-    public function __construct(int $maxHandles)
+    public function __construct($maxHandles)
     {
         $this->maxHandles = $maxHandles;
     }
-    public function create(\WPMailSMTP\Vendor\Psr\Http\Message\RequestInterface $request, array $options) : \WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle
+    public function create(\WPMailSMTP\Vendor\Psr\Http\Message\RequestInterface $request, array $options)
     {
         if (isset($options['curl']['body_as_string'])) {
             $options['_body_as_string'] = $options['curl']['body_as_string'];
@@ -61,7 +50,7 @@ class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryIn
         \curl_setopt_array($easy->handle, $conf);
         return $easy;
     }
-    public function release(\WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy) : void
+    public function release(\WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy)
     {
         $resource = $easy->handle;
         unset($easy->handle);
@@ -84,10 +73,13 @@ class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryIn
      * Completes a cURL transaction, either returning a response promise or a
      * rejected promise.
      *
-     * @param callable(RequestInterface, array): PromiseInterface $handler
-     * @param CurlFactoryInterface                                $factory Dictates how the handle is released
+     * @param callable             $handler
+     * @param EasyHandle           $easy
+     * @param CurlFactoryInterface $factory Dictates how the handle is released
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public static function finish(callable $handler, \WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy, \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryInterface $factory) : \WPMailSMTP\Vendor\GuzzleHttp\Promise\PromiseInterface
+    public static function finish(callable $handler, \WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy, \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryInterface $factory)
     {
         if (isset($easy->options['on_stats'])) {
             self::invokeStats($easy);
@@ -104,17 +96,14 @@ class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryIn
         }
         return new \WPMailSMTP\Vendor\GuzzleHttp\Promise\FulfilledPromise($easy->response);
     }
-    private static function invokeStats(\WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy) : void
+    private static function invokeStats(\WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy)
     {
         $curlStats = \curl_getinfo($easy->handle);
         $curlStats['appconnect_time'] = \curl_getinfo($easy->handle, \CURLINFO_APPCONNECT_TIME);
         $stats = new \WPMailSMTP\Vendor\GuzzleHttp\TransferStats($easy->request, $easy->response, $curlStats['total_time'], $easy->errno, $curlStats);
-        $easy->options['on_stats']($stats);
+        \call_user_func($easy->options['on_stats'], $stats);
     }
-    /**
-     * @param callable(RequestInterface, array): PromiseInterface $handler
-     */
-    private static function finishError(callable $handler, \WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy, \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryInterface $factory) : \WPMailSMTP\Vendor\GuzzleHttp\Promise\PromiseInterface
+    private static function finishError(callable $handler, \WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy, \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryInterface $factory)
     {
         // Get error information and release the handle to the factory.
         $ctx = ['errno' => $easy->errno, 'error' => \curl_error($easy->handle), 'appconnect_time' => \curl_getinfo($easy->handle, \CURLINFO_APPCONNECT_TIME)] + \curl_getinfo($easy->handle);
@@ -126,30 +115,24 @@ class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryIn
         }
         return self::createRejection($easy, $ctx);
     }
-    private static function createRejection(\WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy, array $ctx) : \WPMailSMTP\Vendor\GuzzleHttp\Promise\PromiseInterface
+    private static function createRejection(\WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy, array $ctx)
     {
         static $connectionErrors = [\CURLE_OPERATION_TIMEOUTED => \true, \CURLE_COULDNT_RESOLVE_HOST => \true, \CURLE_COULDNT_CONNECT => \true, \CURLE_SSL_CONNECT_ERROR => \true, \CURLE_GOT_NOTHING => \true];
-        if ($easy->createResponseException) {
-            return \WPMailSMTP\Vendor\GuzzleHttp\Promise\Create::rejectionFor(new \WPMailSMTP\Vendor\GuzzleHttp\Exception\RequestException('An error was encountered while creating the response', $easy->request, $easy->response, $easy->createResponseException, $ctx));
-        }
         // If an exception was encountered during the onHeaders event, then
         // return a rejected promise that wraps that exception.
         if ($easy->onHeadersException) {
-            return \WPMailSMTP\Vendor\GuzzleHttp\Promise\Create::rejectionFor(new \WPMailSMTP\Vendor\GuzzleHttp\Exception\RequestException('An error was encountered during the on_headers event', $easy->request, $easy->response, $easy->onHeadersException, $ctx));
+            return \WPMailSMTP\Vendor\GuzzleHttp\Promise\rejection_for(new \WPMailSMTP\Vendor\GuzzleHttp\Exception\RequestException('An error was encountered during the on_headers event', $easy->request, $easy->response, $easy->onHeadersException, $ctx));
         }
-        $message = \sprintf('cURL error %s: %s (%s)', $ctx['errno'], $ctx['error'], 'see https://curl.haxx.se/libcurl/c/libcurl-errors.html');
-        $uriString = (string) $easy->request->getUri();
-        if ($uriString !== '' && \false === \strpos($ctx['error'], $uriString)) {
-            $message .= \sprintf(' for %s', $uriString);
+        if (\version_compare($ctx[self::CURL_VERSION_STR], self::LOW_CURL_VERSION_NUMBER)) {
+            $message = \sprintf('cURL error %s: %s (%s)', $ctx['errno'], $ctx['error'], 'see https://curl.haxx.se/libcurl/c/libcurl-errors.html');
+        } else {
+            $message = \sprintf('cURL error %s: %s (%s) for %s', $ctx['errno'], $ctx['error'], 'see https://curl.haxx.se/libcurl/c/libcurl-errors.html', $easy->request->getUri());
         }
         // Create a connection exception if it was a specific error code.
         $error = isset($connectionErrors[$easy->errno]) ? new \WPMailSMTP\Vendor\GuzzleHttp\Exception\ConnectException($message, $easy->request, null, $ctx) : new \WPMailSMTP\Vendor\GuzzleHttp\Exception\RequestException($message, $easy->request, $easy->response, null, $ctx);
-        return \WPMailSMTP\Vendor\GuzzleHttp\Promise\Create::rejectionFor($error);
+        return \WPMailSMTP\Vendor\GuzzleHttp\Promise\rejection_for($error);
     }
-    /**
-     * @return array<int|string, mixed>
-     */
-    private function getDefaultConf(\WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy) : array
+    private function getDefaultConf(\WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy)
     {
         $conf = ['_headers' => $easy->request->getHeaders(), \CURLOPT_CUSTOMREQUEST => $easy->request->getMethod(), \CURLOPT_URL => (string) $easy->request->getUri()->withFragment(''), \CURLOPT_RETURNTRANSFER => \false, \CURLOPT_HEADER => \false, \CURLOPT_CONNECTTIMEOUT => 150];
         if (\defined('CURLOPT_PROTOCOLS')) {
@@ -165,7 +148,7 @@ class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryIn
         }
         return $conf;
     }
-    private function applyMethod(\WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy, array &$conf) : void
+    private function applyMethod(\WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy, array &$conf)
     {
         $body = $easy->request->getBody();
         $size = $body->getSize();
@@ -175,7 +158,7 @@ class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryIn
         }
         $method = $easy->request->getMethod();
         if ($method === 'PUT' || $method === 'POST') {
-            // See https://tools.ietf.org/html/rfc7230#section-3.3.2
+            // See http://tools.ietf.org/html/rfc7230#section-3.3.2
             if (!$easy->request->hasHeader('Content-Length')) {
                 $conf[\CURLOPT_HTTPHEADER][] = 'Content-Length: 0';
             }
@@ -184,7 +167,7 @@ class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryIn
             unset($conf[\CURLOPT_WRITEFUNCTION], $conf[\CURLOPT_READFUNCTION], $conf[\CURLOPT_FILE], $conf[\CURLOPT_INFILE]);
         }
     }
-    private function applyBody(\WPMailSMTP\Vendor\Psr\Http\Message\RequestInterface $request, array $options, array &$conf) : void
+    private function applyBody(\WPMailSMTP\Vendor\Psr\Http\Message\RequestInterface $request, array $options, array &$conf)
     {
         $size = $request->hasHeader('Content-Length') ? (int) $request->getHeaderLine('Content-Length') : null;
         // Send the body as a string if the size is less than 1MB OR if the
@@ -204,7 +187,7 @@ class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryIn
             if ($body->isSeekable()) {
                 $body->rewind();
             }
-            $conf[\CURLOPT_READFUNCTION] = static function ($ch, $fd, $length) use($body) {
+            $conf[\CURLOPT_READFUNCTION] = function ($ch, $fd, $length) use($body) {
                 return $body->read($length);
             };
         }
@@ -217,7 +200,7 @@ class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryIn
             $conf[\CURLOPT_HTTPHEADER][] = 'Content-Type:';
         }
     }
-    private function applyHeaders(\WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy, array &$conf) : void
+    private function applyHeaders(\WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy, array &$conf)
     {
         foreach ($conf['_headers'] as $name => $values) {
             foreach ($values as $value) {
@@ -242,7 +225,7 @@ class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryIn
      * @param string $name    Case-insensitive header to remove
      * @param array  $options Array of options to modify
      */
-    private function removeHeader(string $name, array &$options) : void
+    private function removeHeader($name, array &$options)
     {
         foreach (\array_keys($options['_headers']) as $key) {
             if (!\strcasecmp($key, $name)) {
@@ -251,7 +234,7 @@ class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryIn
             }
         }
     }
-    private function applyHandlerOptions(\WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy, array &$conf) : void
+    private function applyHandlerOptions(\WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy, array &$conf)
     {
         $options = $easy->options;
         if (isset($options['verify'])) {
@@ -269,7 +252,7 @@ class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryIn
                     }
                     // If it's a directory or a link to a directory use CURLOPT_CAPATH.
                     // If not, it's probably a file, or a link to a file, so use CURLOPT_CAINFO.
-                    if (\is_dir($options['verify']) || \is_link($options['verify']) === \true && ($verifyLink = \readlink($options['verify'])) !== \false && \is_dir($verifyLink)) {
+                    if (\is_dir($options['verify']) || \is_link($options['verify']) && \is_dir(\readlink($options['verify']))) {
                         $conf[\CURLOPT_CAPATH] = $options['verify'];
                     } else {
                         $conf[\CURLOPT_CAINFO] = $options['verify'];
@@ -277,36 +260,35 @@ class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryIn
                 }
             }
         }
-        if (!isset($options['curl'][\CURLOPT_ENCODING]) && !empty($options['decode_content'])) {
+        if (!empty($options['decode_content'])) {
             $accept = $easy->request->getHeaderLine('Accept-Encoding');
             if ($accept) {
                 $conf[\CURLOPT_ENCODING] = $accept;
             } else {
-                // The empty string enables all available decoders and implicitly
-                // sets a matching 'Accept-Encoding' header.
                 $conf[\CURLOPT_ENCODING] = '';
-                // But as the user did not specify any acceptable encodings we need
-                // to overwrite this implicit header with an empty one.
+                // Don't let curl send the header over the wire
                 $conf[\CURLOPT_HTTPHEADER][] = 'Accept-Encoding:';
             }
         }
-        if (!isset($options['sink'])) {
-            // Use a default temp stream if no sink was set.
-            $options['sink'] = \WPMailSMTP\Vendor\GuzzleHttp\Psr7\Utils::tryFopen('php://temp', 'w+');
-        }
-        $sink = $options['sink'];
-        if (!\is_string($sink)) {
-            $sink = \WPMailSMTP\Vendor\GuzzleHttp\Psr7\Utils::streamFor($sink);
-        } elseif (!\is_dir(\dirname($sink))) {
-            // Ensure that the directory exists before failing in curl.
-            throw new \RuntimeException(\sprintf('Directory %s does not exist for sink value of %s', \dirname($sink), $sink));
+        if (isset($options['sink'])) {
+            $sink = $options['sink'];
+            if (!\is_string($sink)) {
+                $sink = \WPMailSMTP\Vendor\GuzzleHttp\Psr7\stream_for($sink);
+            } elseif (!\is_dir(\dirname($sink))) {
+                // Ensure that the directory exists before failing in curl.
+                throw new \RuntimeException(\sprintf('Directory %s does not exist for sink value of %s', \dirname($sink), $sink));
+            } else {
+                $sink = new \WPMailSMTP\Vendor\GuzzleHttp\Psr7\LazyOpenStream($sink, 'w+');
+            }
+            $easy->sink = $sink;
+            $conf[\CURLOPT_WRITEFUNCTION] = function ($ch, $write) use($sink) {
+                return $sink->write($write);
+            };
         } else {
-            $sink = new \WPMailSMTP\Vendor\GuzzleHttp\Psr7\LazyOpenStream($sink, 'w+');
+            // Use a default temp stream if no sink was set.
+            $conf[\CURLOPT_FILE] = \fopen('php://temp', 'w+');
+            $easy->sink = \WPMailSMTP\Vendor\GuzzleHttp\Psr7\stream_for($conf[\CURLOPT_FILE]);
         }
-        $easy->sink = $sink;
-        $conf[\CURLOPT_WRITEFUNCTION] = static function ($ch, $write) use($sink) : int {
-            return $sink->write($write);
-        };
         $timeoutRequiresNoSignal = \false;
         if (isset($options['timeout'])) {
             $timeoutRequiresNoSignal |= $options['timeout'] < 1;
@@ -334,7 +316,7 @@ class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryIn
                 $scheme = $easy->request->getUri()->getScheme();
                 if (isset($options['proxy'][$scheme])) {
                     $host = $easy->request->getUri()->getHost();
-                    if (!isset($options['proxy']['no']) || !\WPMailSMTP\Vendor\GuzzleHttp\Utils::isHostInNoProxy($host, $options['proxy']['no'])) {
+                    if (!isset($options['proxy']['no']) || !\WPMailSMTP\Vendor\GuzzleHttp\is_host_in_noproxy($host, $options['proxy']['no'])) {
                         $conf[\CURLOPT_PROXY] = $options['proxy'][$scheme];
                     }
                 }
@@ -349,23 +331,17 @@ class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryIn
             if (!\file_exists($cert)) {
                 throw new \InvalidArgumentException("SSL certificate not found: {$cert}");
             }
-            # OpenSSL (versions 0.9.3 and later) also support "P12" for PKCS#12-encoded files.
-            # see https://curl.se/libcurl/c/CURLOPT_SSLCERTTYPE.html
-            $ext = \pathinfo($cert, \PATHINFO_EXTENSION);
-            if (\preg_match('#^(der|p12)$#i', $ext)) {
-                $conf[\CURLOPT_SSLCERTTYPE] = \strtoupper($ext);
-            }
             $conf[\CURLOPT_SSLCERT] = $cert;
         }
         if (isset($options['ssl_key'])) {
             if (\is_array($options['ssl_key'])) {
                 if (\count($options['ssl_key']) === 2) {
-                    [$sslKey, $conf[\CURLOPT_SSLKEYPASSWD]] = $options['ssl_key'];
+                    list($sslKey, $conf[\CURLOPT_SSLKEYPASSWD]) = $options['ssl_key'];
                 } else {
-                    [$sslKey] = $options['ssl_key'];
+                    list($sslKey) = $options['ssl_key'];
                 }
             }
-            $sslKey = $sslKey ?? $options['ssl_key'];
+            $sslKey = isset($sslKey) ? $sslKey : $options['ssl_key'];
             if (!\file_exists($sslKey)) {
                 throw new \InvalidArgumentException("SSL private key not found: {$sslKey}");
             }
@@ -377,12 +353,17 @@ class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryIn
                 throw new \InvalidArgumentException('progress client option must be callable');
             }
             $conf[\CURLOPT_NOPROGRESS] = \false;
-            $conf[\CURLOPT_PROGRESSFUNCTION] = static function ($resource, int $downloadSize, int $downloaded, int $uploadSize, int $uploaded) use($progress) {
-                $progress($downloadSize, $downloaded, $uploadSize, $uploaded);
+            $conf[\CURLOPT_PROGRESSFUNCTION] = function () use($progress) {
+                $args = \func_get_args();
+                // PHP 5.5 pushed the handle onto the start of the args
+                if (\is_resource($args[0])) {
+                    \array_shift($args);
+                }
+                \call_user_func_array($progress, $args);
             };
         }
         if (!empty($options['debug'])) {
-            $conf[\CURLOPT_STDERR] = \WPMailSMTP\Vendor\GuzzleHttp\Utils::debugResource($options['debug']);
+            $conf[\CURLOPT_STDERR] = \WPMailSMTP\Vendor\GuzzleHttp\debug_resource($options['debug']);
             $conf[\CURLOPT_VERBOSE] = \true;
         }
     }
@@ -394,10 +375,8 @@ class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryIn
      * stream, and then encountered a "necessary data rewind wasn't possible"
      * error, causing the request to be sent through curl_multi_info_read()
      * without an error status.
-     *
-     * @param callable(RequestInterface, array): PromiseInterface $handler
      */
-    private static function retryFailedRewind(callable $handler, \WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy, array $ctx) : \WPMailSMTP\Vendor\GuzzleHttp\Promise\PromiseInterface
+    private static function retryFailedRewind(callable $handler, \WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy, array $ctx)
     {
         try {
             // Only rewind if the body has been read from.
@@ -420,7 +399,7 @@ class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryIn
         }
         return $handler($easy->request, $easy->options);
     }
-    private function createHeaderFn(\WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy) : callable
+    private function createHeaderFn(\WPMailSMTP\Vendor\GuzzleHttp\Handler\EasyHandle $easy)
     {
         if (isset($easy->options['on_headers'])) {
             $onHeaders = $easy->options['on_headers'];
@@ -430,16 +409,11 @@ class CurlFactory implements \WPMailSMTP\Vendor\GuzzleHttp\Handler\CurlFactoryIn
         } else {
             $onHeaders = null;
         }
-        return static function ($ch, $h) use($onHeaders, $easy, &$startingResponse) {
+        return function ($ch, $h) use($onHeaders, $easy, &$startingResponse) {
             $value = \trim($h);
             if ($value === '') {
                 $startingResponse = \true;
-                try {
-                    $easy->createResponse();
-                } catch (\Exception $e) {
-                    $easy->createResponseException = $e;
-                    return -1;
-                }
+                $easy->createResponse();
                 if ($onHeaders !== null) {
                     try {
                         $onHeaders($easy->response);
