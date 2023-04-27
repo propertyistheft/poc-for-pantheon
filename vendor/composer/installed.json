@@ -213,6 +213,27 @@
             "install-path": "../../wp-content/plugins/pantheon-advanced-page-cache"
         },
         {
+            "name": "wpackagist-plugin/redirection",
+            "version": "5.3.7",
+            "version_normalized": "5.3.7.0",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/redirection/",
+                "reference": "tags/5.3.7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/redirection.5.3.7.zip"
+            },
+            "require": {
+                "composer/installers": "^1.0 || ^2.0"
+            },
+            "type": "wordpress-plugin",
+            "installation-source": "dist",
+            "homepage": "https://wordpress.org/plugins/redirection/",
+            "install-path": "../../wp-content/plugins/redirection"
+        },
+        {
             "name": "wpackagist-plugin/wordpress-importer",
             "version": "0.8",
             "version_normalized": "0.8.0.0",
