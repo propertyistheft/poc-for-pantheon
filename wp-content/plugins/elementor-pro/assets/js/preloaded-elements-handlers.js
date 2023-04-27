@@ -1,4 +1,4 @@
-/*! elementor-pro - v3.10.2 - 17-01-2023 */
+/*! elementor-pro - v3.12.2 - 09-04-2023 */
 "use strict";
 (self["webpackChunkelementor_pro"] = self["webpackChunkelementor_pro"] || []).push([["preloaded-elements-handlers"],{
 
@@ -29,6 +29,7 @@ var _frontendLegacy15 = _interopRequireDefault(__webpack_require__(/*! modules/t
 var _frontendLegacy16 = _interopRequireDefault(__webpack_require__(/*! modules/theme-elements/assets/js/frontend/frontend-legacy */ "../modules/theme-elements/assets/js/frontend/frontend-legacy.js"));
 var _frontendLegacy17 = _interopRequireDefault(__webpack_require__(/*! modules/woocommerce/assets/js/frontend/frontend-legacy */ "../modules/woocommerce/assets/js/frontend/frontend-legacy.js"));
 var _frontendLegacy18 = _interopRequireDefault(__webpack_require__(/*! modules/loop-builder/assets/js/frontend/frontend-legacy */ "../modules/loop-builder/assets/js/frontend/frontend-legacy.js"));
+var _frontendLegacy19 = _interopRequireDefault(__webpack_require__(/*! modules/mega-menu/assets/js/frontend/frontend-legacy */ "../modules/mega-menu/assets/js/frontend/frontend-legacy.js"));
 const extendDefaultHandlers = defaultHandlers => {
   const handlers = {
     animatedText: _frontendLegacy.default,
@@ -48,7 +49,8 @@ const extendDefaultHandlers = defaultHandlers => {
     themeElements: _frontendLegacy16.default,
     woocommerce: _frontendLegacy17.default,
     tableOfContents: _frontendLegacy14.default,
-    loopBuilder: _frontendLegacy18.default
+    loopBuilder: _frontendLegacy18.default,
+    megaMenu: _frontendLegacy19.default
   };
   return {
     ...defaultHandlers,
@@ -2388,7 +2390,13 @@ class galleryHandler extends elementorModules.frontend.handlers.Base {
     this.gallery.setSettings('tags', 'all' === id ? [] : ['' + id]);
   }
   bindEvents() {
-    this.elements.$titles.on('click', this.galleriesNavigationListener.bind(this));
+    this.elements.$titles.on('click', this.galleriesNavigationListener.bind(this)).on('keyup', event => {
+      const ENTER_KEY = 13,
+        SPACE_KEY = 32;
+      if (ENTER_KEY === event.keyCode || SPACE_KEY === event.keyCode) {
+        event.currentTarget.click();
+      }
+    });
   }
   galleriesNavigationListener(event) {
     const classes = this.getSettings('classes'),
@@ -2633,8 +2641,6 @@ class _default extends elementorModules.Module {
     ['post', 'product'].forEach(skinName => {
       elementorFrontend.elementsHandler.attachHandler('loop-grid', _loadMore.default, skinName);
       elementorFrontend.elementsHandler.attachHandler('loop-grid', _loop.default, skinName);
-    });
-    ['carousel-post'].forEach(skinName => {
       elementorFrontend.elementsHandler.attachHandler('loop-carousel', _loop.default, skinName);
       elementorFrontend.elementsHandler.attachHandler('loop-carousel', _loopCarousel.default, skinName);
     });
@@ -2658,6 +2664,7 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports["default"] = void 0;
 var _loadMore = _interopRequireDefault(__webpack_require__(/*! modules/posts/assets/js/frontend/handlers/load-more */ "../modules/posts/assets/js/frontend/handlers/load-more.js"));
+var _elementHandlers = _interopRequireDefault(__webpack_require__(/*! ./utils/element-handlers */ "../modules/loop-builder/assets/js/frontend/handlers/utils/element-handlers.js"));
 class LoopLoadMore extends _loadMore.default {
   getDefaultSettings() {
     const defaultSettings = super.getDefaultSettings();
@@ -2669,14 +2676,11 @@ class LoopLoadMore extends _loadMore.default {
   }
   afterInsertPosts(postsElements, result) {
     super.afterInsertPosts(postsElements);
-    if (elementorCommon.config.experimentalFeatures.e_lazyload) {
+    if (elementorFrontend.config.experimentalFeatures.e_lazyload) {
       this.handleLazyloadBackgroundElements();
     }
     this.handleDynamicStyleElements(result);
-    this.runElementHandlers(postsElements);
-  }
-  runElementHandlers(postsElements) {
-    [...postsElements].flatMap(el => [...el.querySelectorAll('.elementor-element')]).forEach(el => elementorFrontend.elementsHandler.runReadyTrigger(el));
+    (0, _elementHandlers.default)(postsElements);
   }
 
   /**
@@ -2722,24 +2726,48 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports["default"] = void 0;
 var _imageCarousel = _interopRequireDefault(__webpack_require__(/*! elementor/assets/dev/js/frontend/handlers/image-carousel */ "../../elementor/assets/dev/js/frontend/handlers/image-carousel.js"));
+var _elementHandlers = _interopRequireDefault(__webpack_require__(/*! ./utils/element-handlers */ "../modules/loop-builder/assets/js/frontend/handlers/utils/element-handlers.js"));
 class LoopCarousel extends _imageCarousel.default {
   getDefaultSettings() {
-    return {
-      selectors: {
-        carousel: '.elementor-loop-container',
-        slideContent: '.swiper-slide'
-      }
-    };
+    const defaultSettings = super.getDefaultSettings();
+    defaultSettings.selectors.carousel = '.elementor-loop-container';
+    return defaultSettings;
   }
   getSwiperSettings() {
-    const swiperOptions = super.getSwiperSettings();
-    if ('yes' === this.getElementSettings('arrows')) {
+    const swiperOptions = super.getSwiperSettings(),
+      elementSettings = this.getElementSettings(),
+      isRtl = elementorFrontend.config.is_rtl;
+    if ('yes' === elementSettings.arrows) {
       swiperOptions.navigation = {
-        prevEl: '.elementor-swiper-button-prev',
-        nextEl: '.elementor-swiper-button-next'
+        prevEl: isRtl ? '.elementor-swiper-button-next' : '.elementor-swiper-button-prev',
+        nextEl: isRtl ? '.elementor-swiper-button-prev' : '.elementor-swiper-button-next'
       };
     }
+    if (elementSettings.pagination) {
+      swiperOptions.pagination = {
+        el: '.swiper-pagination',
+        type: elementSettings.pagination,
+        clickable: true
+      };
+    }
+    swiperOptions.on = {
+      slideChange: () => {
+        this.handleElementHandlers();
+      }
+    };
     return swiperOptions;
+  }
+  async onInit() {
+    super.onInit(...arguments);
+    this.ranElementHandlers = false;
+  }
+  handleElementHandlers() {
+    if (this.ranElementHandlers || !this.swiper) {
+      return;
+    }
+    const newSlides = Array.from(this.swiper.slides).slice(this.swiper.activeIndex - 1, this.swiper.slides.length);
+    (0, _elementHandlers.default)(newSlides);
+    this.ranElementHandlers = true;
   }
 }
 exports["default"] = LoopCarousel;
@@ -2772,6 +2800,7 @@ class Loop extends _posts.default {
     const defaultSettings = super.getDefaultSettings();
     defaultSettings.selectors.post = '.elementor-loop-container .elementor';
     defaultSettings.selectors.postsContainer = '.elementor-loop-container';
+    defaultSettings.classes.inPlaceTemplateEditable = 'elementor-in-place-template-editable';
     return defaultSettings;
   }
 
@@ -2782,30 +2811,59 @@ class Loop extends _posts.default {
    */
   fitImages() {}
   getVerticalSpaceBetween() {
-    return this.getElementSettings(this.getSkinPrefix() + 'row_gap.size');
+    return elementorProFrontend.utils.controls.getResponsiveControlValue(this.getElementSettings(), 'row_gap', 'size');
   }
 
   /**
    * This is a callback that runs when the "Edit Template" document handle is clicked in the Editor.
    */
   onInPlaceEditTemplate() {
-    const templateID = this.getElementSettings('template_id'),
-      elementsToRemove = ['style#loop-' + templateID, 'link#font-loop-' + templateID, 'style#loop-dynamic-' + templateID];
-    elementsToRemove.forEach(elementToRemove => {
+    this.$element.addClass(this.getDefaultSettings().classes.inPlaceTemplateEditable);
+    this.elementsToRemove = [];
+    this.handleSwiper();
+    const templateID = this.getElementSettings('template_id');
+    this.elementsToRemove = [...this.elementsToRemove, 'style#loop-' + templateID, 'link#font-loop-' + templateID, 'style#loop-dynamic-' + templateID];
+    this.elementsToRemove.forEach(elementToRemove => {
       this.$element.find(elementToRemove).remove();
     });
   }
-  attachEditDocumentHandle() {
-    // eslint-disable-next-line computed-property-spacing
-    const element = this.$element.find('[data-elementor-type="loop-item"]').first()[0],
-      id = this.getElementSettings('template_id');
-    if (element && id) {
-      (0, _documentHandle.default)({
-        element,
-        title: __('Template', 'elementor-pro'),
-        id
-      }, _documentHandle.EDIT_CONTEXT, () => this.onInPlaceEditTemplate(), '.elementor-element-' + this.getID() + ' .elementor-' + id);
+  handleSwiper() {
+    const swiper = this.elements.$postsContainer.data('swiper');
+    if (!swiper) {
+      return;
     }
+    swiper.slideTo(0);
+    swiper.autoplay.pause();
+    swiper.allowTouchMove = false;
+    swiper.params.autoplay.delay = 1000000; // Add a long delay so that the Swiper does not move while editing the Template. Even though it was paused, it will start again on mouse leave.
+    swiper.update();
+    this.elementsToRemove = [...this.elementsToRemove, '.swiper-pagination', '.elementor-swiper-button', '.elementor-document-handle'];
+  }
+  attachEditDocumentHandle() {
+    const templateId = this.getElementSettings('template_id');
+    if (!templateId) {
+      return;
+    }
+    const elementSettings = this.getElementSettings(),
+      widgetSelector = `.elementor-element-${this.getID()}`,
+      editHandleSelector = elementSettings?.edit_handle_selector + ('[data-elementor-type="loop-item"]' === elementSettings?.edit_handle_selector ? `.elementor-${templateId}` : ''),
+      editHandleElement = this.$element.find(editHandleSelector).first()[0];
+    if (!editHandleElement) {
+      return;
+    }
+    if (this.isFirstEdit()) {
+      // TODO: refactor when CSS :has() is fully supported.
+      this.$element.find('.elementor-swiper-button').remove();
+      return;
+    }
+    (0, _documentHandle.default)({
+      element: editHandleElement,
+      title: __('Template', 'elementor-pro'),
+      id: templateId
+    }, _documentHandle.EDIT_CONTEXT, () => this.onInPlaceEditTemplate(), `${widgetSelector} .elementor-${templateId}`);
+  }
+  isFirstEdit() {
+    return this.$element.has('.e-loop-first-edit').length;
   }
   handleCTA() {
     const emptyViewContainer = document.querySelector(`[data-id="${this.getID()}"] .e-loop-empty-view__wrapper`);
@@ -2839,6 +2897,24 @@ class Loop extends _posts.default {
   }
 }
 exports["default"] = Loop;
+
+/***/ }),
+
+/***/ "../modules/loop-builder/assets/js/frontend/handlers/utils/element-handlers.js":
+/*!*************************************************************************************!*\
+  !*** ../modules/loop-builder/assets/js/frontend/handlers/utils/element-handlers.js ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = runElementHandlers;
+function runElementHandlers(elements) {
+  [...elements].flatMap(el => [...el.querySelectorAll('.elementor-element')]).forEach(el => elementorFrontend.elementsHandler.runReadyTrigger(el));
+}
 
 /***/ }),
 
@@ -3518,6 +3594,555 @@ exports["default"] = lottieHandler;
 
 /***/ }),
 
+/***/ "../modules/mega-menu/assets/js/frontend/frontend-legacy.js":
+/*!******************************************************************!*\
+  !*** ../modules/mega-menu/assets/js/frontend/frontend-legacy.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _megaMenu = _interopRequireDefault(__webpack_require__(/*! ./handlers/mega-menu */ "../modules/mega-menu/assets/js/frontend/handlers/mega-menu.js"));
+var _stretchMenuItemContent = _interopRequireDefault(__webpack_require__(/*! ./handlers/stretch-menu-item-content */ "../modules/mega-menu/assets/js/frontend/handlers/stretch-menu-item-content.js"));
+class _default extends elementorModules.Module {
+  constructor() {
+    super();
+    elementorFrontend.elementsHandler.attachHandler('mega-menu', [_megaMenu.default, _stretchMenuItemContent.default]);
+  }
+}
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ "../modules/mega-menu/assets/js/frontend/handlers/mega-menu.js":
+/*!*********************************************************************!*\
+  !*** ../modules/mega-menu/assets/js/frontend/handlers/mega-menu.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _utils = __webpack_require__(/*! ../utils */ "../modules/mega-menu/assets/js/frontend/utils.js");
+class MegaMenu extends elementorModules.frontend.handlers.NestedTabs {
+  constructor() {
+    super(...arguments);
+    if (elementorFrontend.isEditMode()) {
+      this.lifecycleChangeListener = null;
+    }
+    this.resizeListener = null;
+  }
+  getDefaultSettings() {
+    const settings = super.getDefaultSettings();
+    settings.selectors.menuContainer = '.e-n-menu';
+    settings.selectors.tabTitle = '.e-n-menu-item-title';
+    settings.selectors.desktopTabTitle = '.e-n-menu-items-heading .e-n-menu-item-title';
+    settings.selectors.mobileTabTitle = '.e-n-menu-items-content .e-n-menu-item-title';
+    settings.selectors.headingContainer = '.e-n-menu-items-heading';
+    settings.autoExpand = false;
+    settings.autoFocus = false;
+    settings.selectors.dropdownMenuToggle = '.e-n-menu-toggle';
+    settings.selectors.menuContent = '.e-n-menu-items-content';
+    settings.selectors.contentContainer = '.e-n-menu-items-content .e-con';
+    return settings;
+  }
+  getDefaultElements() {
+    const elements = super.getDefaultElements(),
+      selectors = this.getSettings('selectors');
+    elements.$menuContainer = this.$element.find(selectors.menuContainer);
+    elements.$dropdownMenuToggle = this.$element.find(selectors.dropdownMenuToggle);
+    elements.$menuContent = this.$element.find(selectors.menuContent);
+    elements.$headingContainer = this.$element.find(selectors.headingContainer);
+    elements.$desktopTabTitles = this.$element.find(selectors.desktopTabTitle);
+    elements.$mobileTabTitles = this.$element.find(selectors.mobileTabTitle);
+    elements.$contentContainers = this.$element.find(selectors.contentContainer);
+    return elements;
+  }
+  dropdownMenuHeightControllerConfig() {
+    const selectors = this.getSettings('selectors');
+    return {
+      elements: {
+        $element: this.$element,
+        $dropdownMenuContainer: this.$element.find(selectors.menuContent),
+        $menuToggle: this.$element.find(selectors.dropdownMenuToggle)
+      },
+      classes: {
+        menuToggleActiveClass: 'e-active'
+      },
+      settings: {
+        dropdownMenuContainerMaxHeight: 'auto',
+        menuHeightCssVarName: '--n-menu-dropdown-content-box-height'
+      }
+    };
+  }
+  handleContentContainerPosition() {
+    let $contentContainer = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+    this.resetContentContainersPosition();
+
+    // If no container is passed as an argument, check if there is an active container.
+    $contentContainer = $contentContainer || this.elements.$contentContainers.filter('.e-active');
+    if (!$contentContainer.length) {
+      return;
+    }
+    this.setContentContainerAbsolutePosition($contentContainer);
+  }
+  setContentContainerAbsolutePosition($contentContainer) {
+    const elementSettings = this.getElementSettings(),
+      isFitToContent = 'fit_to_content' === elementSettings.content_width;
+    if ((0, _utils.isMenuInDropdownMode)(elementSettings)) {
+      return;
+    }
+    if (isFitToContent) {
+      const direction = elementorFrontend.config.is_rtl ? 'right' : 'left',
+        menuItemContainerOffset = this.getMenuItemContainerAbsolutePosition($contentContainer);
+      this.elements.$menuContent.css(direction, menuItemContainerOffset);
+    }
+    const headingsHeight = this.elements.$headingContainer[0].getBoundingClientRect().height;
+    if (this.shouldPositionContentAbove($contentContainer, headingsHeight)) {
+      const contentContainerBoundingBox = $contentContainer[0].getBoundingClientRect();
+      $contentContainer.css({
+        position: 'absolute',
+        bottom: headingsHeight + +this.getDistanceFromContentSetting(),
+        width: isFitToContent ? 'max-content' : '',
+        'max-width': contentContainerBoundingBox.width
+      });
+    }
+  }
+  getMenuItemContainerAbsolutePosition($contentContainer) {
+    const tabIndex = $contentContainer.data('content'),
+      $titleEl = this.elements.$tabTitles.filter(this.getTabTitleFilterSelector(tabIndex))[0],
+      titleBoundingBox = $titleEl.getBoundingClientRect(),
+      contentContainerWidth = $contentContainer[0].clientWidth;
+    let menuItemContainerOffset = null;
+    switch (this.getElementSettings('content_horizontal_position')) {
+      case 'left':
+        menuItemContainerOffset = this.getLeftDirectionContainerOffset(contentContainerWidth, titleBoundingBox);
+        break;
+      case 'right':
+        menuItemContainerOffset = this.getRightDirectionContainerOffset(contentContainerWidth, titleBoundingBox);
+        break;
+      default:
+        menuItemContainerOffset = this.getCenteredContainerOffset(contentContainerWidth, titleBoundingBox);
+    }
+    menuItemContainerOffset -= this.getMenuContainerOffset();
+    return menuItemContainerOffset;
+  }
+  getCenteredContainerOffset(contentContainerWidth, titleBoundingBox) {
+    const menuItemContentContainerHalfWidth = contentContainerWidth / 2,
+      bodyWidth = elementorFrontend.elements.$body[0].clientWidth;
+    let titleMiddleOffset = this.adjustForScrollbarIfNeeded(titleBoundingBox.left + titleBoundingBox.width / 2);
+    if (elementorFrontend.config.is_rtl) {
+      titleMiddleOffset = bodyWidth - titleMiddleOffset;
+    }
+    let offset = titleMiddleOffset - menuItemContentContainerHalfWidth;
+    if (titleMiddleOffset + menuItemContentContainerHalfWidth > bodyWidth) {
+      offset = bodyWidth - contentContainerWidth;
+    } else if (menuItemContentContainerHalfWidth > titleMiddleOffset) {
+      offset = 0;
+    }
+    return offset;
+  }
+  getLeftDirectionContainerOffset(contentContainerWidth, titleBoundingBox) {
+    return elementorFrontend.config.is_rtl ? this.getRtlLeftDirectionContainerOffset(contentContainerWidth, titleBoundingBox) : this.getLtrLeftDirectionContainerOffset(contentContainerWidth, titleBoundingBox);
+  }
+  getRtlLeftDirectionContainerOffset(contentContainerWidth, titleBoundingBox) {
+    const bodyWidth = elementorFrontend.elements.$body[0].clientWidth,
+      titleLeftOffset = this.adjustForScrollbarIfNeeded(titleBoundingBox.left);
+    let offset = bodyWidth - titleLeftOffset - contentContainerWidth;
+
+    // If the content container doesn't fit in the viewport, align its right edge with the viewport's right edge.
+    if (-offset + contentContainerWidth > bodyWidth) {
+      offset = 0;
+    }
+    return offset;
+  }
+  getLtrLeftDirectionContainerOffset(contentContainerWidth, titleBoundingBox) {
+    let offset = this.adjustForScrollbarIfNeeded(titleBoundingBox.left);
+    offset = this.adjustStartOffsetToViewport(offset, contentContainerWidth);
+    return offset;
+  }
+  getRightDirectionContainerOffset(contentContainerWidth, titleBoundingBox) {
+    return elementorFrontend.config.is_rtl ? this.getRtlRightDirectionContainerOffset(contentContainerWidth, titleBoundingBox) : this.getLtrRightDirectionContainerOffset(contentContainerWidth, titleBoundingBox);
+  }
+  getRtlRightDirectionContainerOffset(contentContainerWidth, titleBoundingBox) {
+    const bodyWidth = elementorFrontend.elements.$body[0].clientWidth;
+    let offset = bodyWidth - this.adjustForScrollbarIfNeeded(titleBoundingBox.right);
+    offset = this.adjustStartOffsetToViewport(offset, contentContainerWidth);
+    return offset;
+  }
+
+  /**
+   * If the content container doesn't fit in the viewport, align its right edge with the viewport's right edge.
+   *
+   * @param {number} offset
+   * @param {number} contentContainerWidth
+   */
+  adjustStartOffsetToViewport(offset, contentContainerWidth) {
+    const bodyWidth = elementorFrontend.elements.$body[0].clientWidth;
+    if (offset + contentContainerWidth > bodyWidth) {
+      offset = bodyWidth - contentContainerWidth;
+    }
+    return offset;
+  }
+  getLtrRightDirectionContainerOffset(contentContainerWidth, titleBoundingBox) {
+    return contentContainerWidth > titleBoundingBox.right ? 0 : titleBoundingBox.right - contentContainerWidth;
+  }
+  adjustForScrollbarIfNeeded(offset) {
+    if (elementorFrontend.config.is_rtl && elementorFrontend.isEditMode()) {
+      const scrollbarWidth = window.innerWidth - elementorFrontend.elements.$body[0].clientWidth;
+      offset -= scrollbarWidth;
+    }
+    return offset;
+  }
+  getMenuContainerOffset() {
+    const menuContainerBoundingBox = this.elements.$menuContainer[0].getBoundingClientRect();
+    return elementorFrontend.config.is_rtl ? this.getMenuContainerOffsetRtl(menuContainerBoundingBox) : menuContainerBoundingBox.left;
+  }
+  getMenuContainerOffsetRtl(menuContainerBoundingBox) {
+    const bodyWidth = elementorFrontend.elements.$body[0].clientWidth;
+    let menuContainerOffset = bodyWidth - menuContainerBoundingBox.right;
+    if (elementorFrontend.isEditMode()) {
+      // In RTL mode, the editor's scrollbar is on the left side, so we need to add its width to the offset.
+      const scrollbarWidth = window.innerWidth - bodyWidth;
+      menuContainerOffset += scrollbarWidth;
+    }
+    return menuContainerOffset;
+  }
+  resetContentContainersPosition() {
+    this.elements.$contentContainers.css({
+      left: '',
+      right: '',
+      bottom: '',
+      position: 'var(--position)',
+      'max-width': '',
+      width: 'var(--width)'
+    });
+  }
+  getTabContentFilterSelector(tabIndex) {
+    return `[data-content="${tabIndex}"]`;
+  }
+  activateTab(tabIndex) {
+    const settings = this.getSettings(),
+      activeClass = settings.classes.active,
+      containerClass = settings.selectors.tabContent,
+      $requestedTitle = this.elements.$tabTitles.filter(this.getTabTitleFilterSelector(tabIndex)),
+      animationDuration = 'show' === settings.showTabFn ? 0 : 400,
+      $requestedContent = this.elements.$tabContents.filter(this.getTabContentFilterSelector(tabIndex));
+    this.addAnimationToContentIfNeeded(tabIndex);
+    if ($requestedContent.hasClass(containerClass.replace('.', ''))) {
+      $requestedContent[settings.showTabFn](animationDuration, () => this.onShowTabContent($requestedContent));
+      $requestedTitle.add($requestedContent).addClass(activeClass);
+      $requestedContent.css({
+        display: 'var(--display)'
+      });
+      $requestedContent.removeAttr('hidden display');
+    }
+  }
+  deactivateActiveTab(tabIndex) {
+    super.deactivateActiveTab(tabIndex);
+    this.removeAnimationFromContentIfNeeded();
+  }
+  shouldPositionContentAbove($contentContainer) {
+    let offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    const contentDimensions = $contentContainer[0].getBoundingClientRect();
+    return this.isContentShorterThanItsTopOffset(contentDimensions, offset) && this.isContentTallerThanItsBottomOffset(contentDimensions);
+  }
+  isContentShorterThanItsTopOffset(contentDimensions, offset) {
+    return contentDimensions.height < contentDimensions.top - offset;
+  }
+  isContentTallerThanItsBottomOffset(contentDimensions) {
+    return window.innerHeight - contentDimensions.top < contentDimensions.height;
+  }
+  getDistanceFromContentSetting() {
+    const currentDeviceMode = elementorFrontend.getCurrentDeviceMode(),
+      deviceSuffix = 'desktop' === currentDeviceMode ? '' : '_' + currentDeviceMode;
+    return this.getElementSettings('menu_item_title_distance_from_content' + deviceSuffix).size;
+  }
+  onShowTabContent($requestedContent) {
+    this.handleContentContainerPosition($requestedContent);
+    super.onShowTabContent($requestedContent);
+  }
+  onHideTabContent($activeContent) {
+    if ('absolute' === $activeContent.css('position')) {
+      this.resetContentContainersPosition();
+    }
+  }
+  changeActiveTab(tabIndex) {
+    let fromUser = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+    const isActiveTab = this.isActiveTab(tabIndex);
+    this.deactivateActiveTab();
+    if (!isActiveTab || isActiveTab && !fromUser) {
+      this.activateTab(tabIndex);
+    }
+  }
+  onTabClick(event) {
+    if (event.currentTarget.classList.contains('link-only')) {
+      return;
+    }
+    this.changeActiveTab(event.currentTarget.getAttribute('data-tab'), true);
+  }
+  bindEvents() {
+    this.elements.$desktopTabTitles.on(this.getDesktopTabEvents());
+    this.elements.$mobileTabTitles.on(this.getTabEvents());
+    this.elements.$dropdownMenuToggle.on('click', this.onClickToggleDropdownMenu.bind(this));
+    this.elements.$tabContents.on(this.getTabContentEvents());
+    elementorFrontend.addListenerOnce(this.getModelCID(), 'scroll', elementorFrontend.debounce(this.menuHeightController.reassignMobileMenuHeight.bind(this.menuHeightController), 250));
+    elementorFrontend.elements.$window.on('elementor/nested-tabs/activate', this.reInitSwipers);
+    this.resizeListener = this.handleContentContainerPosition.bind(this);
+    elementorFrontend.elements.$window.on('resize', this.resizeListener);
+    if (elementorFrontend.isEditMode()) {
+      this.addChildLifeCycleEventListeners();
+    }
+  }
+
+  /**
+   * Add Child Lifecycle Event Listeners
+   *
+   * This method adds event listeners for the elementor/editor/element-rendered and elementor/editor/element-destroyed
+   * events. These events are fired when an element is rendered or destroyed in the editor. The callback functions
+   * check if the rendered/destroyed element is nested in this mega-menu instance, and if it is, triggeres the
+   * recalculation of the mega-menu's content containers position.
+   */
+  addChildLifeCycleEventListeners() {
+    this.lifecycleChangeListener = this.handleContentContainerChildrenChanges.bind(this);
+    window.addEventListener('elementor/editor/element-rendered', this.lifecycleChangeListener);
+    window.addEventListener('elementor/editor/element-destroyed', this.lifecycleChangeListener);
+  }
+  removeChildLifeCycleEventListeners() {
+    window.removeEventListener('elementor/editor/element-rendered', this.lifecycleChangeListener);
+    window.removeEventListener('elementor/editor/element-destroyed', this.lifecycleChangeListener);
+  }
+  unbindEvents() {
+    this.elements.$desktopTabTitles.off();
+    this.elements.$mobileTabTitles.off();
+    this.elements.$tabContents.off();
+    elementorFrontend.elements.$window.off('resize', this.resizeListener);
+    if (elementorFrontend.isEditMode()) {
+      this.removeChildLifeCycleEventListeners();
+    }
+  }
+  handleContentContainerChildrenChanges(event) {
+    if (!this.isNestedElementRenderedInContentContainer(event.detail.elementView)) {
+      return;
+    }
+    this.handleContentContainerPosition();
+  }
+  isNestedElementRenderedInContentContainer(elementView) {
+    const elementContainer = elementView?.getContainer();
+    if (!elementContainer) {
+      return false;
+    }
+    const elementAncestors = elementContainer.getParentAncestry();
+    return elementAncestors.some(parent => this.getID() === parent.model.get('id'));
+  }
+  getDesktopTabEvents() {
+    const tabEvents = this.getTabEvents();
+    return this.isNeedToOpenOnClick() ? tabEvents : this.replaceClickWithHover(tabEvents);
+  }
+  getTabContentEvents() {
+    return this.isNeedToOpenOnClick() ? {} : {
+      mouseleave: this.onMouseLeave.bind(this)
+    };
+  }
+  isNeedToOpenOnClick() {
+    const elementSettings = this.getElementSettings();
+    return this.isEdit || this.isMobileDevice() || 'hover' !== elementSettings.open_on || 'dropdown' === elementSettings.item_layout;
+  }
+  isMobileDevice() {
+    if (elementorFrontend.utils.environment.isTouchDevice !== undefined) {
+      return elementorFrontend.utils.environment.isTouchDevice;
+    }
+    // Core 3.10 & 3.11 backward compatability
+    const nonMobileDevices = ['mobile', 'mobile_extra', 'tablet', 'tablet_extra'];
+    return nonMobileDevices.includes(elementorFrontend.getCurrentDeviceMode());
+  }
+  replaceClickWithHover(tabEvents) {
+    delete tabEvents.click;
+    tabEvents.mouseenter = this.onMouseTitleEnter.bind(this);
+    tabEvents.mouseleave = this.onMouseLeave.bind(this);
+    return tabEvents;
+  }
+  onMouseTitleEnter(event) {
+    event.preventDefault();
+    const itemsUnderMouseArray = Array.prototype.slice.call(document.querySelectorAll(':hover'));
+    if (this.isActiveMenuItem(itemsUnderMouseArray)) {
+      return;
+    }
+    this.changeActiveTab(event.currentTarget.getAttribute('data-tab'), true);
+  }
+  isActiveMenuItem(itemsUnderMouseArray) {
+    return itemsUnderMouseArray.some(item => item.classList.contains('e-active'));
+  }
+  onClickToggleDropdownMenu(show) {
+    const settings = this.getSettings(),
+      activeClass = settings.classes.active,
+      isDropdownVisible = this.elements.$dropdownMenuToggle.hasClass(activeClass);
+    if ('boolean' !== typeof show) {
+      show = !isDropdownVisible;
+    }
+    this.elements.$dropdownMenuToggle.toggleClass(activeClass, show);
+    this.elements.$menuContent.toggleClass(activeClass, show);
+    elementorFrontend.utils.events.dispatch(window, 'elementor-pro/mega-menu/dropdown-open');
+    this.menuHeightController.reassignMobileMenuHeight();
+  }
+  addAnimationToContentIfNeeded(tabIndex) {
+    const openAnimation = this.getElementSettings('open_animation');
+    if ('none' === openAnimation) {
+      return;
+    }
+    const $requestedContent = this.elements.$tabContents.filter(this.getTabContentFilterSelector(tabIndex));
+    $requestedContent.addClass(`animated ${openAnimation}`);
+  }
+  removeAnimationFromContentIfNeeded() {
+    const openAnimation = this.getElementSettings('open_animation');
+    if ('none' === openAnimation) {
+      return;
+    }
+    this.elements.$tabContents.removeClass(`animated ${openAnimation}`);
+  }
+  isContainingMenuContentTab(itemsUnderMouse) {
+    return itemsUnderMouse.some(item => item.classList.contains('e-n-menu-items-content'));
+  }
+  onMouseLeave(event) {
+    event.preventDefault();
+    const itemsUnderMouseArray = Array.prototype.slice.call(document.querySelectorAll(':hover'));
+    if (this.isContainingMenuContentTab(itemsUnderMouseArray)) {
+      return;
+    }
+    this.deactivateActiveTab();
+  }
+  createMobileTabs() {
+    const settings = this.getSettings();
+    if (elementorFrontend.isEditMode()) {
+      let index = 1;
+      const $widget = this.$element,
+        $contentAreaContainer = this.findElement('.e-n-menu-items-content');
+      this.findElement('.e-n-menu-items-heading > .e-n-menu-item-title').each(function () {
+        const $desktopTabTitle = $widget.find(`${settings.selectors.headingContainer} > *:nth-child( ${index})`).clone(),
+          $mobileTitleHTML = $desktopTabTitle.removeClass('e-normal').addClass('e-collapse');
+
+        // Avoid any possible duplication.
+        if ($widget.find(`#${$mobileTitleHTML[0].id}.e-collapse`).length > 0) {
+          return;
+        }
+        $contentAreaContainer.append($mobileTitleHTML);
+        const $currentContainer = $widget.find(`.e-con[data-content="${index}"]`);
+        if ($currentContainer[0]) {
+          $currentContainer.insertAfter($widget.find(`.e-n-menu-items-content > .e-collapse[data-tab="${index}"]`));
+        }
+        index++;
+      });
+    }
+  }
+  onInit() {
+    this.menuHeightController = new elementorProFrontend.utils.DropdownMenuHeightController(this.dropdownMenuHeightControllerConfig());
+    super.onInit(...arguments);
+  }
+  getPropsThatTriggerContentPositionCalculations() {
+    return ['content_horizontal_position', 'content_position', 'item_position_horizontal', 'content_width', 'item_layout'];
+  }
+  onElementChange(propertyName) {
+    if (this.getPropsThatTriggerContentPositionCalculations().includes(propertyName)) {
+      this.handleContentContainerPosition();
+    }
+  }
+  onEditSettingsChange(propertyName, value) {
+    const settings = this.getSettings();
+    if (settings.autoFocus) {
+      super.onEditSettingsChange(propertyName, value);
+    }
+  }
+}
+exports["default"] = MegaMenu;
+
+/***/ }),
+
+/***/ "../modules/mega-menu/assets/js/frontend/handlers/stretch-menu-item-content.js":
+/*!*************************************************************************************!*\
+  !*** ../modules/mega-menu/assets/js/frontend/handlers/stretch-menu-item-content.js ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _utils = __webpack_require__(/*! ../utils */ "../modules/mega-menu/assets/js/frontend/utils.js");
+class StretchedMenuItemContent extends elementorModules.frontend.handlers.StretchedElement {
+  getStretchedClass() {
+    return 'elementor-widget-n-menu';
+  }
+  getStretchSettingName() {
+    return 'content_width';
+  }
+  getStretchActiveValue() {
+    return 'full_width';
+  }
+  getStretchElementForConfig() {
+    return this.$element.find('.e-n-menu-items-content');
+  }
+  bindEvents() {
+    super.bindEvents();
+    elementorFrontend.addListenerOnce(this.getUniqueHandlerID(), 'elementor-pro/mega-menu/dropdown-open', this.stretch);
+  }
+  unbindEvents() {
+    super.unbindEvents();
+    elementorFrontend.removeListeners(this.getUniqueHandlerID(), 'elementor-pro/mega-menu/dropdown-open', this.stretch);
+  }
+  isStretchSettingEnabled() {
+    return true;
+  }
+  stretch() {
+    if (!this.isStretchSettingEnabled()) {
+      return;
+    }
+    if (this.$element.hasClass('e-fit_to_content') && !(0, _utils.isMenuInDropdownMode)(this.getElementSettings())) {
+      this.stretchElement.reset();
+      return;
+    }
+    this.stretchElement.stretch();
+  }
+}
+exports["default"] = StretchedMenuItemContent;
+
+/***/ }),
+
+/***/ "../modules/mega-menu/assets/js/frontend/utils.js":
+/*!********************************************************!*\
+  !*** ../modules/mega-menu/assets/js/frontend/utils.js ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.isMenuInDropdownMode = isMenuInDropdownMode;
+function isMenuInDropdownMode(elementSettings) {
+  if ('dropdown' === elementSettings.item_layout) {
+    return true;
+  }
+  const activeBreakpointsList = elementorFrontend.breakpoints.getActiveBreakpointsList({
+      withDesktop: true
+    }),
+    breakpointIndex = activeBreakpointsList.indexOf(elementSettings.breakpoint_selector),
+    currentDeviceModeIndex = activeBreakpointsList.indexOf(elementorFrontend.getCurrentDeviceMode());
+  return currentDeviceModeIndex <= breakpointIndex;
+}
+
+/***/ }),
+
 /***/ "../modules/nav-menu/assets/js/frontend/frontend-legacy.js":
 /*!*****************************************************************!*\
   !*** ../modules/nav-menu/assets/js/frontend/frontend-legacy.js ***!
@@ -3586,6 +4211,24 @@ var _default = elementorModules.frontend.handlers.Base.extend({
     elements.$links = elements.$dropdownMenu.find('a.elementor-item');
     return elements;
   },
+  dropdownMenuHeightControllerConfig() {
+    const selectors = this.getSettings('selectors');
+    return {
+      elements: {
+        $element: this.$element,
+        $dropdownMenuContainer: this.$element.find(selectors.dropdownMenu),
+        $menuToggle: this.$element.find(selectors.menuToggle)
+      },
+      classes: {
+        menuToggleActiveClass: 'elementor-active'
+      },
+      settings: {
+        dropdownMenuContainerMaxHeight: '1000vmax',
+        // Max-height value is fixed to 1000vmax in order to allow the mobile menu closing animation.
+        menuHeightCssVarName: '--menu-height'
+      }
+    };
+  },
   bindEvents() {
     if (!this.elements.$menu.length) {
       return;
@@ -3595,7 +4238,7 @@ var _default = elementorModules.frontend.handlers.Base.extend({
       this.elements.$dropdownMenuFinalItems.on('click', this.toggleMenu.bind(this, false));
     }
     elementorFrontend.addListenerOnce(this.$element.data('model-cid'), 'resize', this.stretchMenu);
-    elementorFrontend.addListenerOnce(this.$element.data('model-cid'), 'scroll', this.debounce(this.reassignMobileMenuHeight, 250));
+    elementorFrontend.addListenerOnce(this.$element.data('model-cid'), 'scroll', elementorFrontend.debounce(this.menuHeightController.reassignMobileMenuHeight.bind(this.menuHeightController), 250));
   },
   initStretchElement() {
     this.stretchElement = new elementorModules.frontend.tools.StretchElement({
@@ -3615,7 +4258,7 @@ var _default = elementorModules.frontend.handlers.Base.extend({
     this.elements.$dropdownMenu.attr('aria-hidden', !show);
     this.elements.$menuToggle.toggleClass('elementor-active', show);
     this.toggleNavLinksTabIndex(show);
-    this.reassignMobileMenuHeight(show);
+    this.menuHeightController.reassignMobileMenuHeight(this);
     if (show && this.getElementSettings('full_width')) {
       this.stretchElement.stretch();
     }
@@ -3675,6 +4318,7 @@ var _default = elementorModules.frontend.handlers.Base.extend({
     }
   },
   onInit() {
+    this.menuHeightController = new elementorProFrontend.utils.DropdownMenuHeightController(this.dropdownMenuHeightControllerConfig());
     elementorModules.frontend.handlers.Base.prototype.onInit.apply(this, arguments);
     if (!this.elements.$menu.length) {
       return;
@@ -3705,35 +4349,6 @@ var _default = elementorModules.frontend.handlers.Base.extend({
     if ('full_width' === propertyName) {
       this.stretchMenu();
     }
-  },
-  calculateStickyMenuNavHeight() {
-    const menuToggleHeight = this.elements.$dropdownMenu?.offset().top - jQuery(window).scrollTop();
-    return elementorFrontend.elements.$window.height() - menuToggleHeight;
-  },
-  isElementSticky() {
-    return this.$element.hasClass('elementor-sticky') || this.$element.parents('.elementor-sticky').length;
-  },
-  getMenuHeight() {
-    // Max-height value is fixed to 1000vmax in order to allow the mobile menu closing animation.
-    return this.isElementSticky() ? this.calculateStickyMenuNavHeight() + 'px' : '1000vmax';
-  },
-  setMenuHeight(menuHeight) {
-    this.elements.$dropdownMenu.css('--menu-height', menuHeight);
-  },
-  reassignMobileMenuHeight() {
-    const menuHeight = this.elements.$menuToggle.hasClass('elementor-active') ? this.getMenuHeight() : 0;
-    return this.setMenuHeight(menuHeight);
-  },
-  debounce(fn, time) {
-    let timer;
-    return function () {
-      const context = this;
-      const args = arguments;
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        fn.apply(context, args);
-      }, time);
-    };
   }
 });
 exports["default"] = _default;
@@ -3774,7 +4389,7 @@ class _default extends elementorModules.frontend.Document {
   initTriggers() {
     this.triggers = new _triggers.default(this.getDocumentSettings('triggers'), this);
   }
-  showModal(avoidMultiple) {
+  showModal(avoidMultiple, event) {
     // eslint-disable-next-line @wordpress/no-unused-vars-before-return
     const settings = this.getDocumentSettings();
     if (!this.isEdit) {
@@ -3807,6 +4422,9 @@ class _default extends elementorModules.frontend.Document {
       this.countTimes();
     }
     elementorProFrontend.modules.popup.popupPopped = true;
+    if (!this.isEdit && settings.a11y_navigation) {
+      this.handleKeyboardA11y(event);
+    }
   }
   setEntranceAnimation() {
     const $widgetContent = this.getModal().getElements('widgetContent'),
@@ -3822,6 +4440,49 @@ class _default extends elementorModules.frontend.Document {
     const animationDuration = settings.entrance_animation_duration.size;
     $widgetContent.addClass(newAnimation);
     setTimeout(() => $widgetContent.removeClass(newAnimation), animationDuration * 1000);
+  }
+  handleKeyboardA11y(event) {
+    const selectorFocusedElements = ':focusable';
+    const $focusableElements = this.getModal().getElements('widgetContent').find(selectorFocusedElements);
+    if (!$focusableElements.length) {
+      return;
+    }
+    let $lastButtonClicked = null;
+    if (event?.currentTarget) {
+      $lastButtonClicked = jQuery(event.currentTarget);
+    }
+    const $lastFocusableElement = $focusableElements[$focusableElements.length - 1];
+    const $firstFocusableElement = $focusableElements[0];
+    const onKeyDownPressed = keyDownEvent => {
+      const TAB_KEY = 9;
+      const isShiftPressed = keyDownEvent.shiftKey;
+      const isTabPressed = 'Tab' === keyDownEvent.key || TAB_KEY === keyDownEvent.keyCode;
+      if (!isTabPressed) {
+        return;
+      }
+      const activeElement = elementorFrontend.elements.window.document.activeElement;
+      if (isShiftPressed) {
+        const isFocusOnFirstElement = activeElement === $firstFocusableElement;
+        if (isFocusOnFirstElement) {
+          $lastFocusableElement.focus();
+          keyDownEvent.preventDefault();
+        }
+      } else {
+        const isFocusOnLastElement = activeElement === $lastFocusableElement;
+        if (isFocusOnLastElement) {
+          $firstFocusableElement.focus();
+          keyDownEvent.preventDefault();
+        }
+      }
+    };
+    $firstFocusableElement.focus();
+    const $window = elementorFrontend.elements.$window;
+    $window.on('keydown', onKeyDownPressed).on('elementor/popup/hide', () => {
+      $window.off('keydown', onKeyDownPressed);
+      if ($lastButtonClicked) {
+        $lastButtonClicked.focus();
+      }
+    });
   }
   setExitAnimation() {
     const modal = this.getModal(),
@@ -4113,6 +4774,7 @@ var _loggedIn = _interopRequireDefault(__webpack_require__(/*! ./timing/logged-i
 var _devices = _interopRequireDefault(__webpack_require__(/*! ./timing/devices */ "../modules/popup/assets/js/frontend/timing/devices.js"));
 var _times = _interopRequireDefault(__webpack_require__(/*! ./timing/times */ "../modules/popup/assets/js/frontend/timing/times.js"));
 var _browsers = _interopRequireDefault(__webpack_require__(/*! ./timing/browsers */ "../modules/popup/assets/js/frontend/timing/browsers.js"));
+var _schedule = _interopRequireDefault(__webpack_require__(/*! ./timing/schedule */ "../modules/popup/assets/js/frontend/timing/schedule.js"));
 class _default extends elementorModules.Module {
   constructor(settings, document) {
     super(settings);
@@ -4125,7 +4787,8 @@ class _default extends elementorModules.Module {
       logged_in: _loggedIn.default,
       devices: _devices.default,
       times: _times.default,
-      browsers: _browsers.default
+      browsers: _browsers.default,
+      schedule: _schedule.default
     };
   }
   check() {
@@ -4290,6 +4953,91 @@ class _default extends _base.default {
       initialPageViews = pageViews;
     }
     return pageViews - initialPageViews >= this.getTimingSetting('views');
+  }
+}
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ "../modules/popup/assets/js/frontend/timing/schedule-utils.js":
+/*!********************************************************************!*\
+  !*** ../modules/popup/assets/js/frontend/timing/schedule-utils.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "../node_modules/@babel/runtime/helpers/defineProperty.js"));
+class ScheduleUtils {
+  constructor(args) {
+    (0, _defineProperty2.default)(this, "shouldDisplay", () => {
+      if (!this.settings.startDate && !this.settings.endDate) {
+        return true;
+      }
+      const now = this.getCurrentDateTime();
+      if ((!this.settings.startDate || now >= this.settings.startDate) && (!this.settings.endDate || now <= this.settings.endDate)) {
+        return true;
+      }
+      return false;
+    });
+    this.settings = args.settings;
+  }
+  getCurrentDateTime() {
+    let now = new Date();
+    if ('site' === this.settings.timezone && this.settings.serverDatetime) {
+      now = new Date(this.settings.serverDatetime);
+    }
+    return now;
+  }
+}
+exports["default"] = ScheduleUtils;
+
+/***/ }),
+
+/***/ "../modules/popup/assets/js/frontend/timing/schedule.js":
+/*!**************************************************************!*\
+  !*** ../modules/popup/assets/js/frontend/timing/schedule.js ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _base = _interopRequireDefault(__webpack_require__(/*! ./base */ "../modules/popup/assets/js/frontend/timing/base.js"));
+var _scheduleUtils = _interopRequireDefault(__webpack_require__(/*! ./schedule-utils */ "../modules/popup/assets/js/frontend/timing/schedule-utils.js"));
+class _default extends _base.default {
+  constructor() {
+    super(...arguments);
+    const {
+      schedule_timezone: timezone,
+      schedule_start_date: startDate,
+      schedule_end_date: endDate,
+      schedule_server_datetime: serverDatetime
+    } = this.getSettings();
+    this.settings = {
+      timezone,
+      startDate: startDate ? new Date(startDate) : false,
+      endDate: endDate ? new Date(endDate) : false,
+      serverDatetime: serverDatetime ? new Date(serverDatetime) : false
+    };
+    this.scheduleUtils = new _scheduleUtils.default({
+      settings: this.settings
+    });
+  }
+  getName() {
+    return 'schedule';
+  }
+  check() {
+    return this.scheduleUtils.shouldDisplay();
   }
 }
 exports["default"] = _default;
@@ -5405,20 +6153,9 @@ var _default = elementorModules.frontend.handlers.Base.extend({
     });
   },
   setColsCountSettings() {
-    var currentDeviceMode = elementorFrontend.getCurrentDeviceMode(),
-      settings = this.getElementSettings(),
+    const settings = this.getElementSettings(),
       skinPrefix = this.getSkinPrefix(),
-      colsCount;
-    switch (currentDeviceMode) {
-      case 'mobile':
-        colsCount = settings[skinPrefix + 'columns_mobile'];
-        break;
-      case 'tablet':
-        colsCount = settings[skinPrefix + 'columns_tablet'];
-        break;
-      default:
-        colsCount = settings[skinPrefix + 'columns'];
-    }
+      colsCount = elementorProFrontend.utils.controls.getResponsiveControlValue(settings, `${skinPrefix}columns`);
     this.setSettings('colsCount', colsCount);
   },
   isMasonryEnabled() {
@@ -5428,10 +6165,10 @@ var _default = elementorModules.frontend.handlers.Base.extend({
     imagesLoaded(this.elements.$posts, this.runMasonry);
   },
   getVerticalSpaceBetween() {
-    /* The `verticalSpaceBetween` variable is setup in a way that supports older versions of the portfolio widget */
-    let verticalSpaceBetween = this.getElementSettings(this.getSkinPrefix() + 'row_gap.size');
+    /* The `verticalSpaceBetween` variable is set up in a way that supports older versions of the portfolio widget */
+    let verticalSpaceBetween = elementorProFrontend.utils.controls.getResponsiveControlValue(this.getElementSettings(), `${this.getSkinPrefix()}row_gap`, 'size');
     if ('' === this.getSkinPrefix() && '' === verticalSpaceBetween) {
-      verticalSpaceBetween = this.getElementSettings(this.getSkinPrefix() + 'item_gap.size');
+      verticalSpaceBetween = this.getElementSettings('item_gap.size');
     }
     return verticalSpaceBetween;
   },
@@ -6498,13 +7235,25 @@ var _default = elementorModules.frontend.handlers.Base.extend({
       $input = self.elements.$input,
       $wrapper = self.elements.$wrapper,
       $icon = self.elements.$icon,
+      $toggle = self.elements.$toggle,
       skin = this.getElementSettings('skin'),
       classes = this.getSettings('classes');
+    const toggleFullScreenSearch = () => {
+      $container.toggleClass(classes.isFullScreen).toggleClass(classes.lightbox);
+      $input.trigger('focus');
+    };
     if ('full_screen' === skin) {
-      // Activate full-screen mode on click
-      self.elements.$toggle.on('click', function () {
-        $container.toggleClass(classes.isFullScreen).toggleClass(classes.lightbox);
-        $input.trigger('focus');
+      // Activate full-screen mode on mouse click.
+      $toggle.on('click', function () {
+        toggleFullScreenSearch();
+      });
+
+      // Activate full-screen mode on Enter keyup.
+      $toggle.on('keyup', function (event) {
+        const ENTER_KEY = 13;
+        if (ENTER_KEY === event.keyCode) {
+          toggleFullScreenSearch();
+        }
       });
 
       // Deactivate full-screen mode on click or on esc.
@@ -6517,7 +7266,7 @@ var _default = elementorModules.frontend.handlers.Base.extend({
         $container.removeClass(classes.isFullScreen).removeClass(classes.lightbox);
       });
       elementorFrontend.elements.$document.on('keyup', function (event) {
-        var ESC_KEY = 27;
+        const ESC_KEY = 27;
         if (ESC_KEY === event.keyCode) {
           if ($container.hasClass(classes.isFullScreen)) {
             $container.trigger('click');
@@ -7084,7 +7833,7 @@ class _default extends elementorModules.frontend.handlers.Base {
         toggle: '.elementor-menu-cart__toggle',
         toggleButton: '#elementor-menu-cart__toggle_button',
         toggleWrapper: '.elementor-menu-cart__toggle_wrapper',
-        closeButton: '.elementor-menu-cart__close-button',
+        closeButton: '.elementor-menu-cart__close-button, .elementor-menu-cart__close-button-custom',
         productList: '.elementor-menu-cart__products'
       },
       classes: {
@@ -7688,6 +8437,9 @@ class ImageCarousel extends elementorModules.frontend.handlers.SwiperBase {
         slidesPerView: +elementSettings['slides_to_show_' + breakpointName] || defaultSlidesToShow,
         slidesPerGroup: +elementSettings['slides_to_scroll_' + breakpointName] || 1
       };
+      if (elementSettings.image_spacing_custom) {
+        swiperOptions.breakpoints[elementorBreakpoints[breakpointName].value].spaceBetween = this.getSpaceBetween(breakpointName);
+      }
       lastBreakpointSlidesToShowValue = +elementSettings['slides_to_show_' + breakpointName] || defaultSlidesToShow;
     });
     if ('yes' === elementSettings.autoplay) {
@@ -7707,7 +8459,7 @@ class ImageCarousel extends elementorModules.frontend.handlers.SwiperBase {
       swiperOptions.slidesPerGroup = +elementSettings.slides_to_scroll || 1;
     }
     if (elementSettings.image_spacing_custom) {
-      swiperOptions.spaceBetween = elementSettings.image_spacing_custom.size;
+      swiperOptions.spaceBetween = this.getSpaceBetween();
     }
     const showArrows = 'arrows' === elementSettings.navigation || 'both' === elementSettings.navigation,
       showDots = 'dots' === elementSettings.navigation || 'both' === elementSettings.navigation;
@@ -7754,9 +8506,6 @@ class ImageCarousel extends elementorModules.frontend.handlers.SwiperBase {
 
     // Handle special cases where the value to update is not the value that the Swiper library accepts.
     switch (propertyName) {
-      case 'image_spacing_custom':
-        params.spaceBetween = newSettingValue.size || 0;
-        break;
       case 'autoplay_speed':
         params.autoplay.delay = newSettingValue;
         break;
@@ -7771,10 +8520,15 @@ class ImageCarousel extends elementorModules.frontend.handlers.SwiperBase {
       pause_on_hover: 'pauseOnHover',
       autoplay_speed: 'delay',
       speed: 'speed',
-      image_spacing_custom: 'spaceBetween'
+      arrows_position: 'arrows_position' // Not a Swiper setting.
     };
   }
+
   onElementChange(propertyName) {
+    if (0 === propertyName.indexOf('image_spacing_custom')) {
+      this.updateSpaceBetween(propertyName);
+      return;
+    }
     const changeableProperties = this.getChangeableProperties();
     if (changeableProperties[propertyName]) {
       // 'pause_on_hover' is implemented by the handler with event listeners, not the Swiper library.
@@ -7790,6 +8544,20 @@ class ImageCarousel extends elementorModules.frontend.handlers.SwiperBase {
     if ('activeItemIndex' === propertyName) {
       this.swiper.slideToLoop(this.getEditSettings('activeItemIndex') - 1);
     }
+  }
+  getSpaceBetween() {
+    let device = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+    return elementorFrontend.utils.controls.getResponsiveControlValue(this.getElementSettings(), 'image_spacing_custom', 'size', device) || 0;
+  }
+  updateSpaceBetween(propertyName) {
+    const deviceMatch = propertyName.match('image_spacing_custom_(.*)'),
+      device = deviceMatch ? deviceMatch[1] : 'desktop',
+      newSpaceBetween = this.getSpaceBetween(device);
+    if ('desktop' !== device) {
+      this.swiper.params.breakpoints[elementorFrontend.config.responsive.activeBreakpoints[device].value].spaceBetween = newSpaceBetween;
+    }
+    this.swiper.params.spaceBetween = newSpaceBetween;
+    this.swiper.update();
   }
 }
 exports["default"] = ImageCarousel;
