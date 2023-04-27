@@ -8,7 +8,6 @@ use Elementor\Includes\TemplateLibrary\Data\Controller;
 use Elementor\TemplateLibrary\Classes\Import_Images;
 use Elementor\Plugin;
 use Elementor\User;
-use Elementor\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -33,7 +32,7 @@ class Manager {
 	 *
 	 * @var Source_Base[]
 	 */
-	protected $_registered_sources = []; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+	protected $_registered_sources = [];
 
 	/**
 	 * Imported template images.
@@ -44,7 +43,7 @@ class Manager {
 	 *
 	 * @var Import_Images
 	 */
-	private $_import_images = null; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+	private $_import_images = null;
 
 	/**
 	 * Template library manager constructor.
@@ -439,8 +438,8 @@ class Manager {
 	public function direct_import_template() {
 		/** @var Source_Local $source */
 		$source = $this->get_source( 'local' );
-		$file = Utils::get_super_global_value( $_FILES, 'file' );
-		return $source->import_template( $file['name'], $file['tmp_name'] );
+
+		return $source->import_template( $_FILES['file']['name'], $_FILES['file']['tmp_name'] );
 	}
 
 	/**
@@ -519,25 +518,6 @@ class Manager {
 		$source = $this->get_source( $args['source'] );
 
 		return $source->mark_as_favorite( $args['template_id'], filter_var( $args['favorite'], FILTER_VALIDATE_BOOLEAN ) );
-	}
-
-	public function import_from_json( array $args ) {
-		$validate_args = $this->ensure_args( [ 'editor_post_id', 'elements' ], $args );
-
-		if ( is_wp_error( $validate_args ) ) {
-			return $validate_args;
-		}
-
-		$elements = json_decode( $args['elements'], true );
-
-		$document = Plugin::$instance->documents->get( $args['editor_post_id'] );
-		if ( ! $document ) {
-			return new \WP_Error( 'template_error', 'Document not found.' );
-		}
-
-		$import_data = $document->get_import_data( [ 'content' => $elements ] );
-
-		return $import_data['content'];
 	}
 
 	/**
@@ -621,7 +601,6 @@ class Manager {
 			'delete_template',
 			'import_template',
 			'mark_template_as_favorite',
-			'import_from_json',
 		];
 
 		foreach ( $library_ajax_requests as $ajax_request ) {
@@ -647,9 +626,9 @@ class Manager {
 			$this->handle_direct_action_error( 'Access Denied' );
 		}
 
-		$action = Utils::get_super_global_value( $_REQUEST, 'library_action' ); // phpcs:ignore -- Nonce already verified.
+		$action = $_REQUEST['library_action'];
 
-		$result = $this->$action( $_REQUEST ); // phpcs:ignore -- Nonce already verified.
+		$result = $this->$action( $_REQUEST );
 
 		if ( is_wp_error( $result ) ) {
 			/** @var \WP_Error $result */

@@ -1,10 +1,6 @@
 <?php
 namespace ElementorPro\Modules\Woocommerce\Traits;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
-
 trait Product_Id_Trait {
 
 	public function get_product( $product_id = false ) {

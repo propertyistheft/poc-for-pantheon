@@ -25,9 +25,8 @@ class Template_Query extends Control_Select2 {
 				<# if ( data.actions.new.visible ) { #>
 					<button
 						type="button"
-						class="elementor-button"
+						class="elementor-button elementor-button-default"
 						data-action="new"
-						data-after-action="{{ data.actions.new.after_action }}"
 					>
 						{{ data.actions.new.label }}
 					</button>
@@ -35,9 +34,8 @@ class Template_Query extends Control_Select2 {
 				<# if ( data.actions.edit.visible ) { #>
 					<button
 						type="button"
-						class="elementor-button"
+						class="elementor-button elementor-button-default"
 						data-action="edit"
-						data-after-action="{{ data.actions.edit.after_action }}"
 					>
 						{{ data.actions.edit.label }}
 					</button>
@@ -61,12 +59,10 @@ class Template_Query extends Control_Select2 {
 						'document_config' => [
 							'type' => null,
 						],
-						'after_action' => 'switch_document',
 					],
 					'edit' => [
 						'visible' => false,
 						'label' => __( 'Edit template', 'elementor-pro' ),
-						'after_action' => 'switch_document',
 					],
 				],
 			]

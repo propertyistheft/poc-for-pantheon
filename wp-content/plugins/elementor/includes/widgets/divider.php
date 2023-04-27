@@ -420,7 +420,7 @@ class Widget_Divider extends Widget_Base {
 			[
 				'label' => esc_html__( 'Width', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'size_units' => [ '%', 'px' ],
 				'range' => [
 					'px' => [
 						'max' => 1000,
@@ -644,7 +644,7 @@ class Widget_Divider extends Widget_Base {
 			[
 				'label' => esc_html__( 'Amount', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
+				'size_units' => [ '%', 'px' ],
 				'selectors' => [
 					'{{WRAPPER}}' => '--divider-pattern-size: {{SIZE}}{{UNIT}}',
 				],
@@ -924,7 +924,7 @@ class Widget_Divider extends Widget_Base {
 			[
 				'label' => esc_html__( 'Rotate', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'deg', 'grad', 'rad', 'turn', 'custom' ],
+				'size_units' => [ 'deg', 'grad', 'rad', 'turn' ],
 				'default' => [
 					'unit' => 'deg',
 				],
@@ -945,7 +945,7 @@ class Widget_Divider extends Widget_Base {
 			[
 				'label' => esc_html__( 'Border Width', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'size_units' => [ 'px', '%', 'em' ],
 				'range' => [
 					'px' => [
 						'max' => 20,
@@ -968,7 +968,7 @@ class Widget_Divider extends Widget_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
+				'size_units' => [ 'px', '%', 'em' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-icon' => 'border-radius: {{SIZE}}{{UNIT}}',
 				],

@@ -59,7 +59,7 @@ class Group_Control_Text_Stroke extends Group_Control_Base {
 		$controls['text_stroke'] = [
 			'label' => esc_html__( 'Text Stroke', 'elementor' ),
 			'type' => Controls_Manager::SLIDER,
-			'size_units' => [ 'px', 'em', 'rem', 'custom' ],
+			'size_units' => [ 'px', 'em', 'rem' ],
 			'range' => [
 				'px' => [
 					'min' => 0,

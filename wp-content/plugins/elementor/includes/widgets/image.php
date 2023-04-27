@@ -263,7 +263,7 @@ class Widget_Image extends Widget_Base {
 				'mobile_default' => [
 					'unit' => '%',
 				],
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'size_units' => [ '%', 'px', 'vw' ],
 				'range' => [
 					'%' => [
 						'min' => 1,
@@ -298,7 +298,7 @@ class Widget_Image extends Widget_Base {
 				'mobile_default' => [
 					'unit' => '%',
 				],
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'size_units' => [ '%', 'px', 'vw' ],
 				'range' => [
 					'%' => [
 						'min' => 1,
@@ -324,7 +324,16 @@ class Widget_Image extends Widget_Base {
 			[
 				'label' => esc_html__( 'Height', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vh', 'custom' ],
+				'default' => [
+					'unit' => 'px',
+				],
+				'tablet_default' => [
+					'unit' => 'px',
+				],
+				'mobile_default' => [
+					'unit' => 'px',
+				],
+				'size_units' => [ 'px', 'vh' ],
 				'range' => [
 					'px' => [
 						'min' => 1,
@@ -481,7 +490,7 @@ class Widget_Image extends Widget_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
+				'size_units' => [ 'px', '%', 'em' ],
 				'selectors' => [
 					'{{WRAPPER}} img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -814,14 +823,14 @@ class Widget_Image extends Widget_Base {
 	/**
 	 * Retrieve image widget link URL.
 	 *
-	 * @since 3.11.0
-	 * @access protected
+	 * @since 1.0.0
+	 * @access private
 	 *
 	 * @param array $settings
 	 *
 	 * @return array|string|false An array/string containing the link URL, or false if no link.
 	 */
-	protected function get_link_url( $settings ) {
+	private function get_link_url( $settings ) {
 		if ( 'none' === $settings['link_to'] ) {
 			return false;
 		}

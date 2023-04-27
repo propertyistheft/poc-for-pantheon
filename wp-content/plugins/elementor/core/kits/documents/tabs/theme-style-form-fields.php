@@ -157,7 +157,7 @@ class Theme_Style_Form_Fields extends Tab_Base {
 			[
 				'label' => esc_html__( 'Padding', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'size_units' => [ 'px', 'em', '%' ],
 				'selectors' => [
 					$input_selector => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -177,18 +177,6 @@ class Theme_Style_Form_Fields extends Tab_Base {
 				'dynamic' => [],
 				'selectors' => [
 					$selector => 'color: {{VALUE}};',
-				],
-			]
-		);
-
-		$this->add_control(
-			$prefix . '_accent_color',
-			[
-				'label' => esc_html__( 'Accent Color', 'elementor' ),
-				'type' => Controls_Manager::COLOR,
-				'dynamic' => [],
-				'selectors' => [
-					$selector => 'accent-color: {{VALUE}};',
 				],
 			]
 		);
@@ -231,7 +219,7 @@ class Theme_Style_Form_Fields extends Tab_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
+				'size_units' => [ 'px', '%', 'em' ],
 				'selectors' => [
 					$selector => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],

@@ -2,7 +2,6 @@
 namespace ElementorPro\License;
 
 use Elementor\Core\Common\Modules\Connect\Module as ConnectModule;
-use ElementorPro\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -243,7 +242,7 @@ class API {
 				return new \WP_Error( esc_html__( 'Another check is in progress.', 'elementor-pro' ) );
 			}
 
-			$updater = Plugin::instance()->updater;
+			$updater = Admin::get_updater_instance();
 
 			$translations = wp_get_installed_translations( 'plugins' );
 			$plugin_translations = [];
@@ -362,7 +361,7 @@ class API {
 			),
 			'expired' => sprintf(
 				/* translators: 1: Bold text opening tag, 2: Bold text closing tag, 3: Link opening tag, 4: Link closing tag. */
-				esc_html__( '%1$sYour Elementor Pro license has expired.%2$s Want to keep creating secure and high-performing websites? Renew your subscription to regain access to all of the Elementor Pro widgets, templates, updates & more. %3$sRenew now%4$s', 'elementor-pro' ),
+				esc_html__( '%1$sOh no! Your Elementor Pro license has expired.%2$s Want to keep creating secure and high-performing websites? Renew your subscription to regain access to all of the Elementor Pro widgets, templates, updates & more. %3$sRenew now%4$s', 'elementor-pro' ),
 				'<strong>',
 				'</strong>',
 				'<a href="https://go.elementor.com/renew/" target="_blank">',

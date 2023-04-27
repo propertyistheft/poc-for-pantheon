@@ -153,7 +153,6 @@ class Module extends Module_Base {
 
 	public function register_controls( Controls_Manager $controls_manager ) {
 		$controls_manager->register( new Classes\Conditions_Repeater() );
-		$controls_manager->register( new Classes\Control_Media_Preview() );
 	}
 
 	public function create_new_dialog_types( $types ) {
@@ -356,7 +355,7 @@ class Module extends Module_Base {
 				'description' => esc_html__( 'With the new Theme Builder you can visually manage every part of your site intuitively, making the task of designing a complete website that much easier', 'elementor-pro' ),
 				'button' => [
 					'text' => esc_html__( 'Try it Now', 'elementor-pro' ),
-					'class' => 'elementor-button e-accent',
+					'class' => 'elementor-button elementor-button-success',
 					'url' => Plugin::elementor()->app->get_settings( 'menu_url' ),
 				],
 			] );

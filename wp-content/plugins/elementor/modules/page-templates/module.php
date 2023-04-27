@@ -409,7 +409,11 @@ class Module extends BaseModule {
 	 * @access public
 	 */
 	public static function body_open() {
-		wp_body_open();
+		if ( function_exists( 'wp_body_open' ) ) {
+			wp_body_open();
+		} else {
+			do_action( 'wp_body_open' );
+		}
 	}
 
 	/**

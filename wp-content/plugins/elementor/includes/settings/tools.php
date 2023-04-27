@@ -198,8 +198,7 @@ class Tools extends Settings_Page {
 				return [];
 			}
 
-			uksort( $plugin_information->versions, 'version_compare' );
-			$plugin_information->versions = array_reverse( $plugin_information->versions );
+			krsort( $plugin_information->versions );
 
 			$rollback_versions = [];
 

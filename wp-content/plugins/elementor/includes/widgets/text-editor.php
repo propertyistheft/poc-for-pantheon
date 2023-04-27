@@ -148,7 +148,7 @@ class Widget_Text_Editor extends Widget_Base {
 			[
 				'label' => esc_html__( 'Columns Gap', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'size_units' => [ 'px', '%', 'em', 'vw' ],
 				'range' => [
 					'px' => [
 						'max' => 100,
@@ -357,7 +357,7 @@ class Widget_Text_Editor extends Widget_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
+				'size_units' => [ 'px', '%', 'em' ],
 				'default' => [
 					'unit' => '%',
 				],
@@ -376,7 +376,7 @@ class Widget_Text_Editor extends Widget_Base {
 			'drop_cap_border_width', [
 				'label' => esc_html__( 'Border Width', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'size_units' => [ 'px', '%', 'em' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-drop-cap' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],

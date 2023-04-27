@@ -9,13 +9,10 @@ import { Layout, AllPartsButton, NotFound } from '@elementor/site-editor';
 import { ErrorBoundary, Grid, Button } from '@elementor/app-ui';
 import router from '@elementor/router';
 import Component from './data/component';
-import useFeatureLock from 'elementor-pro-app/hooks/use-feature-lock';
 
 import './site-editor.scss';
 
 function SiteEditor() {
-	const { isLocked } = useFeatureLock( 'site-editor' );
-
 	const basePath = 'site-editor';
 	const headerButtons = [
 		{
@@ -47,7 +44,7 @@ function SiteEditor() {
 			title={ __( 'Theme Builder could not be loaded', 'elementor-pro' ) }
 			learnMoreUrl="https://go.elementor.com/app-theme-builder-load-issue"
 		>
-			<Layout allPartsButton={ <AllPartsButton url={ '/' + basePath } /> } headerButtons={ headerButtons } titleRedirectRoute={ '/' + basePath } promotion={ isLocked }>
+			<Layout allPartsButton={ <AllPartsButton url={ '/' + basePath } /> } headerButtons={ headerButtons } titleRedirectRoute={ '/' + basePath }>
 				<Grid container className="e-site-editor__content_container">
 					<Grid item className="e-site-editor__content_container_main">
 						<TemplatesProvider>

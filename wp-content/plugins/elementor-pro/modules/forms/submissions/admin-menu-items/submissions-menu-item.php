@@ -1,6 +1,7 @@
 <?php
 namespace ElementorPro\Modules\Forms\Submissions\AdminMenuItems;
 
+use Elementor\Core\Admin\Menu\Interfaces\Admin_Menu_Item;
 use Elementor\Core\Admin\Menu\Interfaces\Admin_Menu_Item_With_Page;
 use Elementor\Settings;
 

@@ -145,7 +145,7 @@ class Group_Control_Background extends Group_Control_Base {
 		$fields['color_stop'] = [
 			'label' => esc_html_x( 'Location', 'Background Control', 'elementor' ),
 			'type' => Controls_Manager::SLIDER,
-			'size_units' => [ '%', 'custom' ],
+			'size_units' => [ '%' ],
 			'default' => [
 				'unit' => '%',
 				'size' => 0,
@@ -171,7 +171,7 @@ class Group_Control_Background extends Group_Control_Base {
 		$fields['color_b_stop'] = [
 			'label' => esc_html_x( 'Location', 'Background Control', 'elementor' ),
 			'type' => Controls_Manager::SLIDER,
-			'size_units' => [ '%', 'custom' ],
+			'size_units' => [ '%' ],
 			'default' => [
 				'unit' => '%',
 				'size' => 100,
@@ -201,7 +201,7 @@ class Group_Control_Background extends Group_Control_Base {
 		$fields['gradient_angle'] = [
 			'label' => esc_html_x( 'Angle', 'Background Control', 'elementor' ),
 			'type' => Controls_Manager::SLIDER,
-			'size_units' => [ 'deg', 'grad', 'rad', 'turn', 'custom' ],
+			'size_units' => [ 'deg', 'grad', 'rad', 'turn' ],
 			'default' => [
 				'unit' => 'deg',
 				'size' => 180,
@@ -252,7 +252,6 @@ class Group_Control_Background extends Group_Control_Base {
 			'selectors' => [
 				'{{SELECTOR}}' => 'background-image: url("{{URL}}");',
 			],
-			'has_sizes' => true,
 			'render_type' => 'template',
 			'condition' => [
 				'background' => [ 'classic' ],
@@ -263,7 +262,6 @@ class Group_Control_Background extends Group_Control_Base {
 			'label' => esc_html_x( 'Position', 'Background Control', 'elementor' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => '',
-			'separator' => 'before',
 			'responsive' => true,
 			'options' => [
 				'' => esc_html_x( 'Default', 'Background Control', 'elementor' ),
@@ -292,14 +290,17 @@ class Group_Control_Background extends Group_Control_Base {
 			'label' => esc_html_x( 'X Position', 'Background Control', 'elementor' ),
 			'type' => Controls_Manager::SLIDER,
 			'responsive' => true,
-			'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+			'size_units' => [ 'px', 'em', '%', 'vw' ],
 			'default' => [
+				'unit' => 'px',
 				'size' => 0,
 			],
 			'tablet_default' => [
+				'unit' => 'px',
 				'size' => 0,
 			],
 			'mobile_default' => [
+				'unit' => 'px',
 				'size' => 0,
 			],
 			'range' => [
@@ -335,14 +336,17 @@ class Group_Control_Background extends Group_Control_Base {
 			'label' => esc_html_x( 'Y Position', 'Background Control', 'elementor' ),
 			'type' => Controls_Manager::SLIDER,
 			'responsive' => true,
-			'size_units' => [ 'px', '%', 'em', 'rem', 'vh', 'custom' ],
+			'size_units' => [ 'px', 'em', '%', 'vh' ],
 			'default' => [
+				'unit' => 'px',
 				'size' => 0,
 			],
 			'tablet_default' => [
+				'unit' => 'px',
 				'size' => 0,
 			],
 			'mobile_default' => [
+				'unit' => 'px',
 				'size' => 0,
 			],
 			'range' => [
@@ -426,7 +430,7 @@ class Group_Control_Background extends Group_Control_Base {
 		];
 
 		$fields['size'] = [
-			'label' => esc_html_x( 'Display Size', 'Background Control', 'elementor' ),
+			'label' => esc_html_x( 'Size', 'Background Control', 'elementor' ),
 			'type' => Controls_Manager::SELECT,
 			'responsive' => true,
 			'default' => '',
@@ -450,7 +454,7 @@ class Group_Control_Background extends Group_Control_Base {
 			'label' => esc_html_x( 'Width', 'Background Control', 'elementor' ),
 			'type' => Controls_Manager::SLIDER,
 			'responsive' => true,
-			'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+			'size_units' => [ 'px', 'em', '%', 'vw' ],
 			'range' => [
 				'px' => [
 					'min' => 0,
